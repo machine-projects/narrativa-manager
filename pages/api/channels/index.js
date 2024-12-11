@@ -169,3 +169,7 @@ export default async function handler(req, res) {
       .json({ error: `Erro interno do servidor. ${error.message}` });
   }
 }
+
+export const config = {
+  type: "experimental-background",
+};
