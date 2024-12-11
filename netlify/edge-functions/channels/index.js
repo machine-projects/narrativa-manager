@@ -1,14 +1,14 @@
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "../../../lib/mongodb";
 import {
   getChannelIdFromCustomUrl,
   getChannelDetails,
-} from "@/lib/youtube/channelServices";
+} from "../../../lib/youtube/channelServices";
 import ChannelRepository from "../../../lib/youtube/channelRepository";
 
 import {
   translateToPortuguese,
   targetLanguageToPortuguese,
-} from "@/lib/translate";
+} from "../../../lib/translate";
 import { syncronize } from "../../../lib/youtube/syncronizeService";
 
 

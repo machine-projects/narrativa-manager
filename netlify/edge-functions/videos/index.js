@@ -1,4 +1,4 @@
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "../../../lib/mongodb";
 import VideosRepository from "../../../lib/youtube/videoRepository";
 
 export default async function handler(req, res) {
