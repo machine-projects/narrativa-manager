@@ -9,7 +9,7 @@ import {
   translateToPortuguese,
   targetLanguageToPortuguese,
 } from "@/lib/translate";
-import { syncronize } from "@/lib/youtube/syncronizeService";
+import { syncronize } from "../../../lib/youtube/syncronizeService";
 
 
 export default async function handler(req, res) {
