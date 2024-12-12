@@ -8,8 +8,39 @@ export default async function handler(req, res) {
 
     if (req.method === "GET") {
       // Paginado ou todos os vídeos
-      const { page = 1, limit = 10, all = false } = req.query;
-
+      const {
+        page = 1,
+        limit = 10,
+        all = false,
+        channel_id,
+        channels_ids,
+        videos_urls,
+        published_after,
+        published_before,
+        keywords_in_title,
+        keywords_in_title_presentation,
+        targets,
+        targetLanguage,
+        type_platforms,
+        adm_channel_id,
+        channel_name,
+        channel_name_presentation,
+      } = req.query;
+      const filters = {
+        channel_id,
+        channels_ids: channels_ids ? channels_ids.split(",") : undefined,
+        videos_urls: videos_urls ? videos_urls.split(",") : undefined,
+        published_after,
+        published_before,
+        keywords_in_title,
+        keywords_in_title_presentation,
+        targets: targets ? targets.split(",") : undefined,
+        targetLanguage,
+        type_platforms: type_platforms ? type_platforms.split(",") : undefined,
+        adm_channel_id,
+        channel_name,
+        channel_name_presentation,
+      };
       if (all === "true") {
         const videos = await videosRepository.getAllVideos();
         return res.status(200).json({ total: videos.length, data: videos });
@@ -17,7 +48,7 @@ export default async function handler(req, res) {
 
       const skip = (Number(page) - 1) * Number(limit);
       const total = await videosRepository.countVideos();
-      const videos = await videosRepository.getPaginatedVideos(skip, Number(limit));
+      const videos = await videosRepository.getPaginatedVideos(skip, Number(limit), filters);
 
       res.status(200).json({
         total,
