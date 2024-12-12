@@ -12,6 +12,7 @@
         "@google-cloud/translate": "^8.5.0",
         "@netlify/blobs": "^8.1.0",
         "blobshape": "^1.0.0",
+        "bootstrap": "^5.3.3",
         "bright": "^0.8.5",
         "dotenv": "^16.4.7",
         "googleapis": "^144.0.0",
@@ -19,7 +20,10 @@
         "mongodb": "^6.12.0",
         "next": "15.0.4",
         "react": "18.3.1",
+        "react-dnd": "^16.0.1",
+        "react-dnd-html5-backend": "^16.0.1",
         "react-dom": "18.3.1",
+        "react-tag-input": "^6.10.3",
         "unique-names-generator": "^4.7.1"
     },
     "devDependencies": {
