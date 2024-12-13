@@ -1,6 +1,6 @@
-### Documentação da API de Vídeos
+### **Documentação Atualizada da API de Vídeos**
 
-Esta API permite a manipulação de vídeos, incluindo operações de listagem, adição, atualização e remoção. Abaixo estão detalhadas as rotas disponíveis e os parâmetros esperados.
+Esta API permite a manipulação de vídeos, incluindo operações de listagem, adição, atualização (com possibilidade de atualizar informações do canal associado) e remoção.
 
 ---
 
@@ -93,27 +93,38 @@ Adiciona um novo vídeo à coleção.
 **Endpoint:** `PUT /api/videos`
 
 #### **Descrição:**
-Atualiza um vídeo existente pelo ID.
+Atualiza um vídeo existente pelo ID. Também pode atualizar o campo `applied_videos` no canal associado e criar o campo `applied` no vídeo.
 
 #### **Corpo da Requisição:**
 ```json
 {
   "id": "67574070be9ac4a11a66cbe3",
+  "updateChannelApplied": true,
   "title": "Novo Título",
   "description": "Nova descrição"
 }
 ```
 
+#### **Campos Especiais:**
+| Campo                    | Tipo      | Obrigatório | Descrição                                                                                     |
+|--------------------------|-----------|-------------|-----------------------------------------------------------------------------------------------|
+| `id`                     | `string`  | Sim         | ID do vídeo a ser atualizado.                                                                |
+| `updateChannelApplied`   | `boolean` | Não         | Se `true`, atualiza o campo `applied_videos` no canal associado e cria o campo `applied`.    |
+
 #### **Resposta:**
 ```json
 {
-  "message": "Vídeo atualizado com sucesso."
+  "message": "Vídeo atualizado com sucesso.",
+  "channelUpdate": {
+    "channelId": "UC5D6CilDrr1NId7OpFxThPw",
+    "applied_videos": 10
+  }
 }
 ```
 
 #### **Erros:**
 - `400`: O ID do vídeo é obrigatório.
-- `404`: Vídeo não encontrado.
+- `404`: Vídeo ou canal não encontrado.
 
 ---
 
@@ -155,8 +166,7 @@ Remove um vídeo da coleção pelo ID.
 
 ### **Notas**
 - A API suporta paginação e filtros avançados para facilitar consultas específicas.
-- Certifique-se de enviar os campos no formato correto, especialmente datas (`ISO 8601`).
-
+- No método `PUT`, o campo `updateChannelApplied` é opcional, mas habilitá-lo permite sincronizar dados entre vídeos e canais.
 
 #### Link Iframe download Audio Video
 ```html
@@ -329,11 +339,32 @@ Cadastra um novo canal no sistema. Realiza sincronização automática de vídeo
   ```
 
 ---
+### Atualização do README
 
-### **GET /api/channels**
+---
+
+### **Documentação Atualizada da API de Canais**
+
+Esta API permite o gerenciamento completo de canais, incluindo listagem, cadastro, exclusão e sincronização de vídeos associados.
+
+---
+
+### **Endpoints Disponíveis**
+
+| Método | Endpoint         | Descrição                                 |
+|--------|-------------------|-------------------------------------------|
+| `GET`  | `/api/channels`  | Recupera informações sobre os canais.     |
+| `POST` | `/api/channels`  | Cadastra um novo canal.                   |
+| `DELETE` | `/api/channels` | Remove um canal e seus vídeos associados.|
+
+---
+
+### **1. Listar Canais**
+
+**Endpoint:** `GET /api/channels`
 
 #### **Descrição**
-Recupera informações sobre os canais cadastrados. Suporta filtros, paginação e busca por detalhes específicos.
+Recupera informações sobre os canais cadastrados, com suporte a filtros e paginação.
 
 #### **Parâmetros da Query**
 | Parâmetro                    | Tipo      | Obrigatório | Descrição                                                                                     |
@@ -359,7 +390,7 @@ Recupera informações sobre os canais cadastrados. Suporta filtros, paginação
 GET /api/channels?page=1&limit=5&targetLanguage=en&type_platforms=youtube
 ```
 
-#### **Exemplo de Resposta**
+#### **Resposta com Sucesso**
 ```json
 {
   "total": 50,
@@ -387,19 +418,102 @@ GET /api/channels?page=1&limit=5&targetLanguage=en&type_platforms=youtube
 }
 ```
 
+---
+
+### **2. Cadastrar Canal**
+
+**Endpoint:** `POST /api/channels`
+
+#### **Descrição**
+Cadastra um novo canal e sincroniza automaticamente os vídeos associados.
+
+#### **Corpo da Requisição**
+| Parâmetro              | Tipo      | Obrigatório | Descrição                                                                 |
+|------------------------|-----------|-------------|---------------------------------------------------------------------------|
+| `custom_name_channel`  | `string`  | Sim         | URL customizada do canal no YouTube (ex: `RomanPaths`).                   |
+| `targetLanguage`       | `string`  | Sim         | Código do idioma-alvo (ex: `en`, `pt-BR`).                                |
+| `type_platforms`       | `array`   | Sim         | Plataformas associadas ao canal (ex: `["youtube"]`).                      |
+| `adm_channel_id`       | `string`  | Sim         | Identificação do administrador do canal.                                  |
+| `targets`              | `array`   | Não         | Lista de palavras-chave associadas ao canal (ex: `["history", "roman"]`). |
+
+#### **Exemplo de Requisição**
+```json
+{
+  "custom_name_channel": "RomanPaths",
+  "targetLanguage": "en",
+  "type_platforms": ["youtube"],
+  "adm_channel_id": "Narrativa Gamer",
+  "targets": ["history", "roman"]
+}
+```
+
+#### **Resposta com Sucesso**
+```json
+{
+  "message": "Canal cadastrado com sucesso e sincronizado 100 itens",
+  "channel": {
+    "id": "64df21c5d87f2c3abc12de45",
+    "channel_name_presentation": "Caminhos Romanos",
+    "channel_name": "Roman Paths",
+    "custom_name_channel": "RomanPaths",
+    "channelId": "UC5D6CilDrr1NId7OpFxThPw",
+    "language": "Inglês",
+    "targetLanguage": "en",
+    "type_platforms": ["youtube"],
+    "adm_channel_id": "Narrativa Gamer",
+    "description": "Descrição traduzida do canal...",
+    "image": "https://example.com/channel_image.jpg",
+    "applied_videos": 0,
+    "createdAt": "2024-12-06T12:00:00.000Z",
+    "targets": ["history", "roman"]
+  },
+  "num_syncronize": 100
+}
+```
+
+---
+
+### **3. Remover Canal**
+
+**Endpoint:** `DELETE /api/channels`
+
+#### **Descrição**
+Remove um canal específico e todos os vídeos associados a ele.
+
+#### **Parâmetros da Query**
+| Parâmetro   | Tipo     | Obrigatório | Descrição                       |
+|-------------|----------|-------------|---------------------------------|
+| `channelId` | `string` | Sim         | ID do canal a ser removido.     |
+
+#### **Exemplo de Requisição**
+```http
+DELETE /api/channels?channelId=UC5D6CilDrr1NId7OpFxThPw
+```
+
+#### **Resposta com Sucesso**
+```json
+{
+  "message": "Canal e vídeos associados removidos com sucesso.",
+  "result": {
+    "deletedChannel": 1,
+    "deletedVideos": 25
+  }
+}
+```
+
 #### **Erros**
-- **`404 - Canal não encontrado`**
+- **`400 - Campo obrigatório ausente`**
   ```json
-  { "error": "Canal não encontrado." }
+  { "error": "O ID do canal é obrigatório." }
   ```
-- **`405 - Método não permitido`**
+- **`500 - Erro interno do servidor`**
   ```json
-  { "error": "Método GET não permitido." }
+  { "error": "Erro ao remover o canal e vídeos associados. Detalhes do erro." }
   ```
 
 ---
 
 ### **Notas**
-- O endpoint `POST` também sincroniza automaticamente os vídeos do canal após o cadastro.
-- Utilize filtros no `GET` para otimizar as buscas, especialmente em grandes volumes de dados.
-- Todos os endpoints são protegidos contra duplicações e inconsistências de dados.
+- O método `DELETE` remove todos os vídeos associados ao canal, garantindo consistência nos dados.
+- Utilize o método `POST` para adicionar canais com sincronização automática de vídeos.
+- O método `GET` suporta múltiplos filtros para consultas personalizadas.
