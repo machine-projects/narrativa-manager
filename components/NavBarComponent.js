@@ -31,6 +31,11 @@ const NavBarComponent = ({ active }) => {
               </Link>
                 </li>
                 <li className="nav-item">
+                <Link href="/CanaisAdm" passHref style={{textDecoration: 'none'}}>
+                  <span className={`nav-link ` + (active=='canais-adm' ? 'active' : '')}>
+                    Canais Administrativos
+                  </span>
+                </Link>
                 <Link href="/Canais" passHref style={{textDecoration: 'none'}}>
                   <span className={`nav-link ` + (active=='canais' ? 'active' : '')}>
                     Canais

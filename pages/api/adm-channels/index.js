@@ -1,7 +1,9 @@
+import AdmChannelRepository from '../../../lib/adm/admChannelRepository';
 import clientPromise from '../../../lib/mongodb';
-import AdmChannelRepository from '../../../lib/adm-channel/admChannelRepository';
+
 
 export default async function handler(req, res) {
+ 
   try {
     const client = await clientPromise;
     const admChannelRepository = new AdmChannelRepository(client);

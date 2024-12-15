@@ -9,5 +9,6 @@ export function Footer() {
                 </Link>
             </p>
         </footer>
+        
     );
 };
