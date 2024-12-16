@@ -1,0 +1,135 @@
+import React from 'react';
+
+const LanguageSelect = ({ value, onChange, label = "Idioma" }) => {
+    const languageMap = {
+        af: "Africâner",
+        am: "Amárico",
+        ar: "Árabe",
+        az: "Azeri",
+        be: "Bielorrusso",
+        bg: "Búlgaro",
+        bn: "Bengali",
+        bs: "Bósnio",
+        ca: "Catalão",
+        ceb: "Cebuano",
+        co: "Corso",
+        cs: "Tcheco",
+        cy: "Galês",
+        da: "Dinamarquês",
+        de: "Alemão",
+        el: "Grego",
+        en: "Inglês",
+        eo: "Esperanto",
+        es: "Espanhol",
+        et: "Estoniano",
+        eu: "Basco",
+        fa: "Persa",
+        fi: "Finlandês",
+        fr: "Francês",
+        fy: "Frísio",
+        ga: "Irlandês",
+        gd: "Gaélico Escocês",
+        gl: "Galego",
+        gu: "Guzerate",
+        ha: "Hauçá",
+        haw: "Havaiano",
+        he: "Hebraico",
+        hi: "Hindi",
+        hmn: "Hmong",
+        hr: "Croata",
+        ht: "Crioulo Haitiano",
+        hu: "Húngaro",
+        hy: "Armênio",
+        id: "Indonésio",
+        ig: "Igbo",
+        is: "Islandês",
+        it: "Italiano",
+        ja: "Japonês",
+        jw: "Javanês",
+        ka: "Georgiano",
+        kk: "Cazaque",
+        km: "Khmer",
+        kn: "Canarim",
+        ko: "Coreano",
+        ku: "Curdo",
+        ky: "Quirguiz",
+        la: "Latim",
+        lb: "Luxemburguês",
+        lo: "Lao",
+        lt: "Lituano",
+        lv: "Letão",
+        mg: "Malgaxe",
+        mi: "Maori",
+        mk: "Macedônio",
+        ml: "Malaiala",
+        mn: "Mongol",
+        mr: "Marata",
+        ms: "Malaio",
+        mt: "Maltês",
+        my: "Birmanês",
+        ne: "Nepalês",
+        nl: "Holandês",
+        no: "Norueguês",
+        ny: "Nianja",
+        or: "Oriá",
+        pa: "Punjabi",
+        pl: "Polonês",
+        ps: "Pachto",
+        pt: "Português",
+        ro: "Romeno",
+        ru: "Russo",
+        rw: "Kinyarwanda",
+        sd: "Sindi",
+        si: "Cingalês",
+        sk: "Eslovaco",
+        sl: "Esloveno",
+        sm: "Samoano",
+        sn: "Shona",
+        so: "Somali",
+        sq: "Albanês",
+        sr: "Sérvio",
+        st: "Soto do Sul",
+        su: "Sundanês",
+        sv: "Sueco",
+        sw: "Suaíli",
+        ta: "Tâmil",
+        te: "Telugu",
+        tg: "Tadjique",
+        th: "Tailandês",
+        tk: "Turcomeno",
+        tl: "Tagalo",
+        tr: "Turco",
+        tt: "Tártaro",
+        ug: "Uigur",
+        uk: "Ucraniano",
+        ur: "Urdu",
+        uz: "Uzbeque",
+        vi: "Vietnamita",
+        xh: "Xhosa",
+        yi: "Iídiche",
+        yo: "Iorubá",
+        zh: "Chinês (Simplificado)",
+        "zh-TW": "Chinês (Tradicional)",
+        zu: "Zulu",
+    };
+
+    return (
+        <div className="mb-3">
+            <label className="form-label">{label}</label>
+            <select
+                className="form-select"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+            >
+                <option value="">Selecione um idioma</option>
+                {Object.entries(languageMap).map(([key, value]) => (
+                    <option key={key} value={key}>
+                        {value}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+};
+
+export default LanguageSelect;

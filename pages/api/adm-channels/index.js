@@ -1,6 +1,6 @@
 import AdmChannelRepository from '../../../lib/adm/admChannelRepository';
 import clientPromise from '../../../lib/mongodb';
-
+import { targetLanguageToPortuguese } from '../../../lib/translate';
 
 export default async function handler(req, res) {
  
@@ -47,24 +47,28 @@ export default async function handler(req, res) {
 
       // Validação da estrutura das plataformas em "channels"
       for (const [index, channel] of channels.entries()) {
-        if (!channel.language) {
+        if (!channel.languageTarget) {
           return res.status(400).json({
             error: `O campo "language" está ausente no canal de índice ${index}.`
           });
         }
-        if (!channel.targetLanguage) {
-          return res.status(400).json({
-            error: `O campo "targetLanguage" está ausente no canal de índice ${index}.`
-          });
+        else {
+          channel.language = targetLanguageToPortuguese(channel.languageTarget)
         }
+    
         if (!channel.platforms) {
           return res.status(400).json({
             error: `O campo "platforms" está ausente no canal de índice ${index}.`
           });
+
+
+
+
         }
 
         const platforms = ['youtube', 'tiktok', 'instagram', 'kwai'];
         for (const platform of platforms) {
+    
           if (!channel.platforms[platform] || typeof channel.platforms[platform].enable !== 'boolean') {
             return res.status(400).json({
               error: `A plataforma "${platform}" no canal de índice ${index} deve incluir "enable" como um booleano.`
