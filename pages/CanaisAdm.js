@@ -11,14 +11,13 @@ const CadastrarAdmCanal = () => {
 
     const listChannels = async (page) => {
         try {
-            const response = await fetch(`/api/adm-channels?page=${page}&limit=10`,
-                {method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    cache: 'no-store',
-                }
-            );
+            const response = await fetch(`/api/adm-channels?page=${page}&limit=10`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                cache: 'no-store'
+            });
 
             if (!response.ok) {
                 throw new Error('Erro ao carregar canais');
@@ -57,7 +56,7 @@ const CadastrarAdmCanal = () => {
                 <div className="accordion mt-4" id="accordionChannels">
                     {channels.length > 0 ? (
                         channels.map((channel) => (
-                            <div className="card" key={channel._id}>
+                            <div className="card card border-dark mb-3" key={channel._id} >
                                 <div className="card-header" id={`heading-${channel._id}`}>
                                     <h5 className="mb-0 d-flex justify-content-between align-items-center">
                                         <button
@@ -82,12 +81,8 @@ const CadastrarAdmCanal = () => {
                                     data-bs-parent="#accordionChannels"
                                 >
                                     <div className="card-body">
-                                        <h6>Idiomas</h6>
-                                        {channel.channels.map((subChannel, idx) => (
-                                            <span key={idx} className="badge bg-info me-1">
-                                                {subChannel.language}
-                                            </span>
-                                        ))}
+                                        <h6>Descrição</h6>
+                                        {channel.description}
                                         <h6 className="mt-3">Marcadores</h6>
                                         {channel.targets.map((target, idx) => (
                                             <span key={idx} className="badge bg-secondary me-1">
@@ -95,31 +90,37 @@ const CadastrarAdmCanal = () => {
                                             </span>
                                         ))}
                                         <h6 className="mt-3">Plataformas</h6>
+
                                         {channel.channels.map((subChannel, idx) => (
                                             <div key={idx} className="border p-2 mb-2">
+                                                
+                                                <div >
+                                                <div className="card-header">
+                                                    <h5 className="mb-0 d-flex justify-content-between align-items-center">
+                                                        {subChannel.language}
+                                                    </h5>
+                                                </div>
                                                 {Object.entries(subChannel.platforms).map(([platform, config]) => (
-                                                    <div key={platform} className="mb-2">
-                                                        <strong>{platform.toUpperCase()}:</strong>
-                                                        <select
-                                                            className="form-select ms-2"
-                                                            value={config.enable ? 'true' : 'false'}
-                                                            disabled
-                                                        >
-                                                            <option value="true">Ativo</option>
-                                                            <option value="false">Inativo</option>
-                                                        </select>
-                                                        {config.url && (
-                                                            <a
-                                                                href={config.url}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="ms-2"
-                                                            >
-                                                                Link
-                                                            </a>
-                                                        )}
+                                                    <div className="container">
+                                                        <div key={platform} className="mb-2">
+                                                            <strong>
+                                                                {config.enable ? platform.toUpperCase() + ':' : ''}
+                                                            </strong>
+                                                            <br></br>
+                                                            {config.url && (
+                                                                <a
+                                                                    href={config.url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="ms-2"
+                                                                >
+                                                                    {config.url}
+                                                                </a>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 ))}
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -136,31 +137,19 @@ const CadastrarAdmCanal = () => {
                 <nav aria-label="Pagination" className="mt-4">
                     <ul className="pagination d-flex justify-content-center">
                         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                            <button
-                                className="page-link"
-                                onClick={() => listChannels(currentPage - 1)}
-                            >
+                            <button className="page-link" onClick={() => listChannels(currentPage - 1)}>
                                 Anterior
                             </button>
                         </li>
                         {[...Array(totalPages)].map((_, index) => (
-                            <li
-                                key={index}
-                                className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-                            >
-                                <button
-                                    className="page-link"
-                                    onClick={() => listChannels(index + 1)}
-                                >
+                            <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                <button className="page-link" onClick={() => listChannels(index + 1)}>
                                     {index + 1}
                                 </button>
                             </li>
                         ))}
                         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                            <button
-                                className="page-link"
-                                onClick={() => listChannels(currentPage + 1)}
-                            >
+                            <button className="page-link" onClick={() => listChannels(currentPage + 1)}>
                                 Próximo
                             </button>
                         </li>
