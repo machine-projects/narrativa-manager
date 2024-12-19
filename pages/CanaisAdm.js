@@ -11,7 +11,7 @@ const CadastrarAdmCanal = () => {
 
     const listChannels = async (page) => {
         try {
-            const response = await axios.get(`/api/adm-channels?page=${page}&limit=5`);
+            const response = await axios.get(`/api/adm-channels?page=${page}&limit=10`);
             setChannels(response.data.data);
             setCurrentPage(response.data.page);
             setTotalPages(response.data.totalPages);

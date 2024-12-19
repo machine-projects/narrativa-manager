@@ -1,6 +1,7 @@
 import AdmChannelRepository from '../../../lib/adm/admChannelRepository';
 import clientPromise from '../../../lib/mongodb';
 import { targetLanguageToPortuguese } from '../../../lib/translate';
+import { revalidatePath } from 'next/cache'
 
 export default async function handler(req, res) {
  
@@ -87,7 +88,7 @@ export default async function handler(req, res) {
       };
 
       const result = await admChannelRepository.insertAdmChannel(newAdmChannel);
-
+      revalidatePath('/api/adm-channels')
       res.status(201).json({
         message: 'Canal administrativo adicionado com sucesso.',
         admChannel: { id: result.insertedId, ...newAdmChannel },
