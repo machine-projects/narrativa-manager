@@ -1,8 +1,6 @@
 import AdmChannelRepository from '../../../lib/adm/admChannelRepository';
 import clientPromise from '../../../lib/mongodb';
 import { targetLanguageToPortuguese } from '../../../lib/translate';
-import { revalidatePath } from 'next/cache'
-
 export default async function handler(req, res) {
  
   try {
@@ -41,7 +39,7 @@ export default async function handler(req, res) {
       });
     } else if (req.method === 'POST') {
       const { channel_name_presentation, channels, description, targets } = req.body;
-
+      // const {  }
       if (!channel_name_presentation || !channels || !Array.isArray(channels)) {
         return res.status(400).json({ error: 'Campos obrigatórios estão ausentes ou incorretos.' });
       }
@@ -88,7 +86,6 @@ export default async function handler(req, res) {
       };
 
       const result = await admChannelRepository.insertAdmChannel(newAdmChannel);
-      revalidatePath('/api/adm-channels')
       res.status(201).json({
         message: 'Canal administrativo adicionado com sucesso.',
         admChannel: { id: result.insertedId, ...newAdmChannel },

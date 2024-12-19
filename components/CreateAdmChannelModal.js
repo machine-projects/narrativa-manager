@@ -19,8 +19,11 @@ const CreateAdmChannelModal = ({ onSuccess }) => {
     const [description, setDescription] = useState('');
     const [targets, setTargets] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    
     const languageMap = {
+        "pt": "Português",
+        "en": "Inglês",
+        "es": "Espanhol",
         "af": "Africâner",
         "am": "Amárico",
         "ar": "Árabe",
@@ -37,9 +40,7 @@ const CreateAdmChannelModal = ({ onSuccess }) => {
         "da": "Dinamarquês",
         "de": "Alemão",
         "el": "Grego",
-        "en": "Inglês",
         "eo": "Esperanto",
-        "es": "Espanhol",
         "et": "Estoniano",
         "eu": "Basco",
         "fa": "Persa",
@@ -94,7 +95,6 @@ const CreateAdmChannelModal = ({ onSuccess }) => {
         "pa": "Punjabi",
         "pl": "Polonês",
         "ps": "Pachto",
-        "pt": "Português",
         "ro": "Romeno",
         "ru": "Russo",
         "rw": "Kinyarwanda",

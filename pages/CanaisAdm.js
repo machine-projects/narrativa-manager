@@ -11,10 +11,23 @@ const CadastrarAdmCanal = () => {
 
     const listChannels = async (page) => {
         try {
-            const response = await axios.get(`/api/adm-channels?page=${page}&limit=10`);
-            setChannels(response.data.data);
-            setCurrentPage(response.data.page);
-            setTotalPages(response.data.totalPages);
+            const response = await fetch(`/api/adm-channels?page=${page}&limit=10`,
+                {method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    cache: 'no-store',
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Erro ao carregar canais');
+            }
+
+            const data = await response.json();
+            setChannels(data.data);
+            setCurrentPage(data.page);
+            setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Erro ao carregar canais:', error);
         }
