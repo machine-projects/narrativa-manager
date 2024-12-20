@@ -1,64 +1,23 @@
 import React from 'react';
 import NavBarComponent from '../components/NavBarComponent';
 import CreateChannelModal from '../components/CreateChannelModal';
-import axios from 'axios';
+import PaginateComponent from 'components/PaginateComponent';
 
 const CadastrarCanal = () => {
     const [channels, setChannels] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(0);
     const [totalPages, setTotalPages] = React.useState(0);
-    const [paginateList, setPaginateLists] = React.useState({
-        first: {number: 0, isActive: false},
-        second: {number: 0, isActive: false},
-        last: {number: 0, isActive: false}
-    });
-
-    const managePagination = () => {
-        const isTheFirstPage = currentPage == 1;
-        const isTheLastPage = currentPage == totalPages;
-        console.log('currentPage', currentPage);
-        console.log('totalPages', totalPages);
-        
-        if (isTheFirstPage) {
-          console.log('caiu aq 1');
-            setPaginateLists({
-                first: {number: currentPage, isActive: true},
-                second: {number: currentPage + 1, isActive: false},
-                last: {number: currentPage + 2, isActive: false}
-            });
-        }
-
-        if (isTheLastPage) {
-          console.log('caiu aq 2');
-            setPaginateLists({
-                first: {number: currentPage - 2, isActive: false},
-                second: {number: currentPage - 1, isActive: false},
-                last: {number: currentPage, isActive: true}
-            });
-        }
-
-        if (!isTheFirstPage && !isTheLastPage) {
-          console.log('caiu aq 3');
-          
-            setPaginateLists({
-                first: {number: currentPage - 1, isActive: false},
-                second: {number: currentPage, isActive: true},
-                last: {number: currentPage + 1, isActive: false}
-            });
-            
-          }
-          console.log(paginateList);
-    };
+    const [itemsLimit] = React.useState(10);
 
     const listChannels = async (page) => {
-      console.log('chamouuuuuuu', page);
-      
-        const request = await axios.get(`/api/channels?page=${page}&limit=2`);
-        setChannels(request.data.data);
-
-        setCurrentPage(Number(request.data.page));
-        setTotalPages(Number(request.data.totalPages));
-        managePagination();
+      fetch(`/api/channels?page=${page}&limit=${itemsLimit}`, {cache: 'no-store'}).then((response) => {
+        response.json().then((data) => {
+            setChannels(data.data);
+            setCurrentPage(Number(data.page));
+            setTotalPages(Number(data.totalPages));
+        });
+            
+        });
     };
 
     const formatDate = (date) => {
@@ -105,33 +64,7 @@ const CadastrarCanal = () => {
                     </table>
                 </div>
 
-                <nav aria-label="...">
-                    <ul className="pagination d-flex justify-content-center">
-                        <li className="page-item disabled">
-                            <a className="page-link">Anterior</a>
-                        </li>
-                        <li className={`page-item ` + (paginateList.first.isActive ? 'active' : '')} aria-current="page">
-                            <a className="page-link" onClick={() => listChannels(paginateList.first.number)}>
-                                {paginateList.first.number}
-                            </a>
-                        </li>
-                        <li className={`page-item ` + (paginateList.second.isActive ? 'active' : '')} aria-current="page">
-                            <a className="page-link" onClick={() => listChannels(paginateList.second.number)}>
-                                {paginateList.second.number}
-                            </a>
-                        </li>
-                        <li className={`page-item ` + (paginateList.last.isActive ? 'active' : '')} aria-current="page">
-                            <a className="page-link" onClick={() => listChannels(paginateList.last.number)}>
-                                {paginateList.last.number}
-                            </a>
-                        </li>
-                        <li className="page-item">
-                            <a className="page-link" href="#">
-                                Proximo
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                <PaginateComponent currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => listChannels(page)} />
             </div>
         </div>
     );

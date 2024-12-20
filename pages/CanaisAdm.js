@@ -3,15 +3,17 @@ import NavBarComponent from '../components/NavBarComponent';
 import CreateAdmChannelModal from '../components/CreateAdmChannelModal';
 import axios from 'axios';
 import { FaTrash, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import PaginateComponent from 'components/PaginateComponent';
 
 const CadastrarAdmCanal = () => {
     const [channels, setChannels] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const [totalPages, setTotalPages] = React.useState(0);
+    const [itemsLimit] = React.useState(10);
 
     const listChannels = async (page) => {
         try {
-            const response = await fetch(`/api/adm-channels?page=${page}&limit=10`, {
+            const response = await fetch(`/api/adm-channels?page=${page}&limit=${itemsLimit}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -44,7 +46,7 @@ const CadastrarAdmCanal = () => {
     return (
         <div>
             <CreateAdmChannelModal onSuccess={() => listChannels(currentPage)} />
-            <NavBarComponent active="canais" />
+            <NavBarComponent active="canais-adm" />
             <div className="container">
                 <div className="d-flex justify-content-between mt-3">
                     <h2>Gerenciar Canais Administrativos</h2>
@@ -56,7 +58,7 @@ const CadastrarAdmCanal = () => {
                 <div className="accordion mt-4" id="accordionChannels">
                     {channels.length > 0 ? (
                         channels.map((channel) => (
-                            <div className="card card border-dark mb-3" key={channel._id} >
+                            <div className="card border-dark mb-3" key={channel._id}>
                                 <div className="card-header" id={`heading-${channel._id}`}>
                                     <h5 className="mb-0 d-flex justify-content-between align-items-center">
                                         <button
@@ -93,33 +95,47 @@ const CadastrarAdmCanal = () => {
 
                                         {channel.channels.map((subChannel, idx) => (
                                             <div key={idx} className="border p-2 mb-2">
-                                                
-                                                <div >
-                                                <div className="card-header">
-                                                    <h5 className="mb-0 d-flex justify-content-between align-items-center">
-                                                        {subChannel.language}
-                                                    </h5>
-                                                </div>
-                                                {Object.entries(subChannel.platforms).map(([platform, config]) => (
-                                                    <div className="container">
-                                                        <div key={platform} className="mb-2">
-                                                            <strong>
-                                                                {config.enable ? platform.toUpperCase() + ':' : ''}
-                                                            </strong>
-                                                            <br></br>
-                                                            {config.url && (
-                                                                <a
-                                                                    href={config.url}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="ms-2"
-                                                                >
-                                                                    {config.url}
-                                                                </a>
-                                                            )}
-                                                        </div>
+                                                <div>
+                                                    <div className="card-header">
+                                                        <h5 className="mb-0 d-flex justify-content-between align-items-center">
+                                                            {subChannel.language}
+                                                        </h5>
                                                     </div>
-                                                ))}
+                                                    {channel.channels.map((subChannel, idx) => (
+                                                        <div key={idx} className="border p-2 mb-2">
+                                                            <div>
+                                                                <div className="card-header">
+                                                                    <h5 className="mb-0 d-flex justify-content-between align-items-center">
+                                                                        {subChannel.language}
+                                                                    </h5>
+                                                                </div>
+                                                                {Object.entries(subChannel.platforms).map(
+                                                                    ([platform, config]) => (
+                                                                        <div key={platform} className="container">
+                                                                            <div className="mb-2">
+                                                                                <strong>
+                                                                                    {config.enable
+                                                                                        ? platform.toUpperCase() + ':'
+                                                                                        : ''}
+                                                                                </strong>
+                                                                                <br></br>
+                                                                                {config.url && (
+                                                                                    <a
+                                                                                        href={config.url}
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer"
+                                                                                        className="ms-2"
+                                                                                    >
+                                                                                        {config.url}
+                                                                                    </a>
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
                                         ))}
@@ -134,27 +150,11 @@ const CadastrarAdmCanal = () => {
                     )}
                 </div>
 
-                <nav aria-label="Pagination" className="mt-4">
-                    <ul className="pagination d-flex justify-content-center">
-                        <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => listChannels(currentPage - 1)}>
-                                Anterior
-                            </button>
-                        </li>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                <button className="page-link" onClick={() => listChannels(index + 1)}>
-                                    {index + 1}
-                                </button>
-                            </li>
-                        ))}
-                        <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={() => listChannels(currentPage + 1)}>
-                                Próximo
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
+                <PaginateComponent
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => listChannels(page)}
+                />
             </div>
         </div>
     );
