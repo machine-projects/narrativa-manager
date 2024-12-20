@@ -5,6 +5,7 @@ import { ChannelService } from 'services/ChannelService';
 
 const CreateChannelModal = ({ onChannelCreate }) => {
     const closeModalButtonRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [channelName, setChannelName] = useState('');
     const [idChannel, setIdChannel] = useState('');
@@ -31,8 +32,6 @@ const CreateChannelModal = ({ onChannelCreate }) => {
         setChannelLanguage('');
         setChannelsType([]);
         setTags([]);
-        console.log('se pa limpou');
-        
     };
 
     const languageMap = {
@@ -69,6 +68,7 @@ const CreateChannelModal = ({ onChannelCreate }) => {
     const type_platforms = ['Youtube', 'TikTok', 'Twitch', 'Instagram'];
 
     const createChannel = async () => {
+        setIsLoading(true);
         try {
             const channelCreated = await ChannelService.createChannel({
                 custom_name_channel: channelName,
@@ -86,6 +86,8 @@ const CreateChannelModal = ({ onChannelCreate }) => {
             }
         } catch (error) {
             alert('Erro: ' + error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -112,6 +114,7 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                                 className="form-control"
                                 id="exampleFormControlInput1"
                                 placeholder="Nome do Canal"
+                                value={channelName}
                                 onChange={(e) => setChannelName(e.target.value)}
                             />
                         </div>
@@ -122,6 +125,7 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                                 className="form-control"
                                 id="exampleFormControlInput1"
                                 placeholder="ID do Canal"
+                                value={idChannel}
                                 onChange={(e) => setIdChannel(e.target.value)}
                             />
                         </div>
@@ -130,7 +134,7 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                             <select
                                 className="form-select"
                                 aria-label="Default select example"
-                                defaultValue=""
+                                value={channelLanguage}
                                 onChange={(e) => setChannelLanguage(e.target.value)}
                             >
                                 <option value="" disabled>
@@ -145,7 +149,7 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                         </div>
 
                         <div className="mb-3">
-                            <select className="form-select" multiple onChange={handleSelectChange}>
+                            <select className="form-select" multiple onChange={handleSelectChange} value={channelsType}>
                                 {type_platforms.map((item) => (
                                     <option key={item} value={item}>
                                         {item}
@@ -174,8 +178,11 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                         >
                             Fechar
                         </button>
-                        <button type="button" className="btn btn-primary" onClick={createChannel}>
-                            Salvar e Criar
+                        <button type="button" className="btn btn-primary" onClick={createChannel} disabled={isLoading}>
+                            {isLoading && (
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            )}
+                            &nbsp;Salvar e Criar
                         </button>
                     </div>
                 </div>
