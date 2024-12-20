@@ -42,7 +42,7 @@ Retorna vídeos de forma paginada ou todos os vídeos, com suporte a diversos fi
     {
       "_id": "67574070be9ac4a11a66cbe3",
       "title": "The 10 Forgotten Truths About...",
-      "video_url": "https://www.youtube.com/watch?v=kOb3mFi1yYM",
+      "url": "https://www.youtube.com/watch?v=kOb3mFi1yYM",
       "published_at": "2024-12-06T21:30:04.000Z",
       ...
     }

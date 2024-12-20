@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavBarComponent from '../components/NavBarComponent';
 import CreateAdmChannelModal from '../components/CreateAdmChannelModal';
-import axios from 'axios';
+
 import { FaTrash, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import PaginateComponent from 'components/PaginateComponent';
 
@@ -62,7 +62,7 @@ const CadastrarAdmCanal = () => {
                                 <div className="card-header" id={`heading-${channel._id}`}>
                                     <h5 className="mb-0 d-flex justify-content-between align-items-center">
                                         <button
-                                            className="btn btn-link"
+                                            className="btn btn-link  "
                                             data-bs-toggle="collapse"
                                             data-bs-target={`#collapse-${channel._id}`}
                                             aria-expanded="false"
@@ -96,11 +96,7 @@ const CadastrarAdmCanal = () => {
                                         {channel.channels.map((subChannel, idx) => (
                                             <div key={idx} className="border p-2 mb-2">
                                                 <div>
-                                                    <div className="card-header">
-                                                        <h5 className="mb-0 d-flex justify-content-between align-items-center">
-                                                            {subChannel.language}
-                                                        </h5>
-                                                    </div>
+                                             
                                                     {channel.channels.map((subChannel, idx) => (
                                                         <div key={idx} className="border p-2 mb-2">
                                                             <div>
