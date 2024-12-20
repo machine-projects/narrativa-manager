@@ -1,6 +1,5 @@
 export class BaseService {
-
-    get({ url, headers, allowCache }) {
+    static get({ url, headers, allowCache }) {
         const options = {
             method: 'GET',
             headers: headers,
@@ -11,10 +10,20 @@ export class BaseService {
             options.cache = 'no-store';
         }
 
-        fetch(url, options).then((response) => {
-            response.json().then((data) => {
-                return data;
-            });
+        return fetch(url, options).then((response) => {
+            return response.json();
+        });
+    }
+
+    static post({ url, headers, body }) {
+        const options = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(body)
+        };
+    
+        return fetch(url, options).then((response) => {
+            return response.json();
         });
     }
 }

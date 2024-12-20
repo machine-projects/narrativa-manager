@@ -2,6 +2,7 @@ import React from 'react';
 import NavBarComponent from '../components/NavBarComponent';
 import CreateChannelModal from '../components/CreateChannelModal';
 import PaginateComponent from 'components/PaginateComponent';
+import { ChannelService } from 'services/ChannelService';
 
 const CadastrarCanal = () => {
     const [channels, setChannels] = React.useState([]);
@@ -10,13 +11,10 @@ const CadastrarCanal = () => {
     const [itemsLimit] = React.useState(10);
 
     const listChannels = async (page) => {
-      fetch(`/api/channels?page=${page}&limit=${itemsLimit}`, {cache: 'no-store'}).then((response) => {
-        response.json().then((data) => {
+        ChannelService.listChannels(page, itemsLimit).then((data) => {
             setChannels(data.data);
             setCurrentPage(Number(data.page));
             setTotalPages(Number(data.totalPages));
-        });
-            
         });
     };
 
