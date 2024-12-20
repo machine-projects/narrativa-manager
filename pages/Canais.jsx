@@ -23,13 +23,17 @@ const CadastrarCanal = () => {
         return dateObject.toLocaleDateString('pt-BR');
     };
 
+    const handleChannelCreated = () => {
+        listChannels(1);
+    }
+
     React.useEffect(() => {
         listChannels(1);
     }, []);
 
     return (
         <div>
-            <CreateChannelModal />
+            <CreateChannelModal onChannelCreate={handleChannelCreated} />
             <NavBarComponent active="canais" />
             <div className="container">
                 <div className="d-flex justify-content-between mt-3">
@@ -43,6 +47,7 @@ const CadastrarCanal = () => {
                     <table className="table table-bordered">
                         <thead>
                             <tr>
+                                <th scope="col"></th>
                                 <th scope="col">Nome do canal</th>
                                 <th scope="col">Idioma</th>
                                 <th scope="col">Canal Administrador</th>
@@ -52,6 +57,9 @@ const CadastrarCanal = () => {
                         <tbody>
                             {channels.map((channel) => (
                                 <tr key={channel._id}>
+                                    <td style={{ width: '50px' }}>
+                                        <img src={channel.image} alt="" width={50} className="rounded" />
+                                    </td>
                                     <td>{channel.channel_name_presentation}</td>
                                     <td>{channel.language}</td>
                                     <td>{channel.adm_channel_id}</td>
@@ -62,7 +70,11 @@ const CadastrarCanal = () => {
                     </table>
                 </div>
 
-                <PaginateComponent currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => listChannels(page)} />
+                <PaginateComponent
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => listChannels(page)}
+                />
             </div>
         </div>
     );

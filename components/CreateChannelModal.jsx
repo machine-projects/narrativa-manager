@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import './CreateChannelModal.css';
+import { ChannelService } from 'services/ChannelService';
 
-const CreateChannelModal = () => {
-  const [channelName, setChannelName] = useState('');
-  const [idChannel, setIdChannel] = useState('');
-  const [channelLanguage, setChannelLanguage] = useState('');
-  const [channelsType, setChannelsType] = useState([]);
-  const [tags, setTags] = useState([]);
+const CreateChannelModal = ({ onChannelCreate }) => {
+    const closeModalButtonRef = useRef(null);
+
+    const [channelName, setChannelName] = useState('');
+    const [idChannel, setIdChannel] = useState('');
+    const [channelLanguage, setChannelLanguage] = useState('');
+    const [channelsType, setChannelsType] = useState([]);
+    const [tags, setTags] = useState([]);
 
     const handleDelete = (i) => {
         setTags(tags.filter((tag, index) => index !== i));
@@ -15,6 +18,21 @@ const CreateChannelModal = () => {
 
     const handleAddition = (tag) => {
         setTags([...tags, tag]);
+    };
+
+    const handleSelectChange = (e) => {
+        const values = Array.from(e.target.selectedOptions, (option) => option.value);
+        setChannelsType(values);
+    };
+
+    const clearForm = () => {
+        setChannelName('');
+        setIdChannel('');
+        setChannelLanguage('');
+        setChannelsType([]);
+        setTags([]);
+        console.log('se pa limpou');
+        
     };
 
     const languageMap = {
@@ -50,6 +68,27 @@ const CreateChannelModal = () => {
 
     const type_platforms = ['Youtube', 'TikTok', 'Twitch', 'Instagram'];
 
+    const createChannel = async () => {
+        try {
+            const channelCreated = await ChannelService.createChannel({
+                custom_name_channel: channelName,
+                targetLanguage: channelLanguage,
+                type_platforms: channelsType,
+                adm_channel_id: idChannel,
+                targets: tags.map((e) => e.id)
+            });
+
+            if (channelCreated) {
+                alert('Canal criado com sucesso!');
+                closeModalButtonRef.current.click();
+                onChannelCreate(true);
+                clearForm();
+            }
+        } catch (error) {
+            alert('Erro: ' + error);
+        }
+    };
+
     return (
         <div
             className="modal fade"
@@ -73,6 +112,7 @@ const CreateChannelModal = () => {
                                 className="form-control"
                                 id="exampleFormControlInput1"
                                 placeholder="Nome do Canal"
+                                onChange={(e) => setChannelName(e.target.value)}
                             />
                         </div>
 
@@ -82,6 +122,7 @@ const CreateChannelModal = () => {
                                 className="form-control"
                                 id="exampleFormControlInput1"
                                 placeholder="ID do Canal"
+                                onChange={(e) => setIdChannel(e.target.value)}
                             />
                         </div>
 
@@ -90,7 +131,7 @@ const CreateChannelModal = () => {
                                 className="form-select"
                                 aria-label="Default select example"
                                 defaultValue=""
-                                onChange={(e) => setSelectedLanguage(e.target.value)}
+                                onChange={(e) => setChannelLanguage(e.target.value)}
                             >
                                 <option value="" disabled>
                                     Selecione o idioma do canal
@@ -104,7 +145,7 @@ const CreateChannelModal = () => {
                         </div>
 
                         <div className="mb-3">
-                            <select className="form-select" aria-label="Default select example" multiple>
+                            <select className="form-select" multiple onChange={handleSelectChange}>
                                 {type_platforms.map((item) => (
                                     <option key={item} value={item}>
                                         {item}
@@ -124,10 +165,16 @@ const CreateChannelModal = () => {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                        <button
+                            type="button"
+                            id="closeModalButton"
+                            ref={closeModalButtonRef}
+                            className="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
                             Fechar
                         </button>
-                        <button type="button" className="btn btn-primary">
+                        <button type="button" className="btn btn-primary" onClick={createChannel}>
                             Salvar e Criar
                         </button>
                     </div>

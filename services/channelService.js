@@ -10,4 +10,27 @@ export class ChannelService extends BaseService {
             allowCache: false
         });
     }
+
+    static async createChannel(channels) {
+        try {
+            const response = await super.post(
+                '/api/channels',
+                {
+                    'Content-Type': 'application/json'
+                },
+                {
+                    custom_name_channel: channels.custom_name_channel,
+                    targetLanguage: channels.targetLanguage,
+                    type_platforms: channels.type_platforms,
+                    adm_channel_id: channels.adm_channel_id,
+                    targets: channels.targets
+                }
+            );
+            
+            return response.statusCode === 201;
+        } catch (error) {
+            console.error('Erro ao criar canal:', error);
+            return false;
+        }
+    }
 }
