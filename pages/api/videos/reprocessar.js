@@ -6,8 +6,8 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Método não permitido" });
     }
 
-    // const reprocessar =  await reprocessamento()
-    const reprocessar =  "sem processamento"
+    const reprocessar =  await reprocessamento()
+    // const reprocessar =  "sem processamento"
 
 
     res.status(200).json({

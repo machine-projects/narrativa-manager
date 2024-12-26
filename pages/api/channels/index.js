@@ -1,5 +1,5 @@
 import clientPromise from '../../../lib/mongodb';
-import { getChannelIdFromCustomUrl, getChannelDetails } from '../../../lib/youtube/channelServices';
+import { getChannelIdFromCustomUrl, getChannelDetails, getChannelName } from '../../../lib/youtube/channelServices';
 import ChannelRepository from '../../../lib/youtube/channelRepository';
 
 import { translateToPortuguese, targetLanguageToPortuguese } from '../../../lib/translate';
@@ -11,13 +11,13 @@ export default async function handler(req, res) {
         const channelRepository = new ChannelRepository(client);
 
         if (req.method === 'POST') {
-            const { custom_name_channel, targetLanguage, type_platforms, adm_channel_id, targets = [] } = req.body;
+            const { url, targetLanguage, type_platforms, adm_channel_id, targets = [] } = req.body;
 
-            if (!custom_name_channel || !targetLanguage || !type_platforms || !adm_channel_id) {
+            if (!targetLanguage || !type_platforms || !adm_channel_id) {
                 return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
             }
-
-            const channelId = await getChannelIdFromCustomUrl(custom_name_channel.trim());
+            const custom_name_channel = getChannelName(url, false);
+            const channelId = await getChannelIdFromCustomUrl(url);
             if (!channelId) {
                 return res.status(404).json({ error: 'Canal não encontrado.' });
             }
@@ -51,7 +51,9 @@ export default async function handler(req, res) {
                 image: channelDetails.image || '',
                 applied_videos: 0,
                 createdAt: new Date(),
-                targets
+                targets,
+                vanityChannelUrl: channelDetails.vanityChannelUrl,
+                isFamilySafe : channelDetails.isFamilySafe 
             };
 
             const result = await channelRepository.insertChannel(newChannel);
@@ -121,7 +123,7 @@ export default async function handler(req, res) {
                 data: channels
             });
         } else if (req.method == 'DELETE') {
-            const { channelId } = req.query;
+            const { channelId } = req.body;
 
             if (!channelId) {
                 return res.status(400).json({ error: 'O ID do canal é obrigatório.' });
