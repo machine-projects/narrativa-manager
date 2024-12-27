@@ -1,6 +1,8 @@
 import clientPromise from '../../../lib/mongodb';
 import { getChannelIdFromCustomUrl, getChannelDetails, getChannelName } from '../../../lib/youtube/channelServices';
 import ChannelRepository from '../../../lib/youtube/channelRepository';
+import AdmChannelRepository from 'lib/adm/admChannelRepository';
+import Validation  from 'lib/validation';
 
 import { translateToPortuguese, targetLanguageToPortuguese } from '../../../lib/translate';
 import { syncronize } from '../../../lib/youtube/syncronizeService';
@@ -9,13 +11,25 @@ export default async function handler(req, res) {
     try {
         const client = await clientPromise;
         const channelRepository = new ChannelRepository(client);
+        const admChannelRepositry = new AdmChannelRepository(client);
 
         if (req.method === 'POST') {
-            const { url, targetLanguage, type_platforms, adm_channel_id, targets = [] } = req.body;
+            const { url, targetLanguage, type_platforms, targets = [], adm_channels = [] } = req.body;
+            const validator = new Validation(req.body);
+            
+            validator.requireFields({
+                targetLanguage: true, 
+                type_platforms: true, 
+                adm_channels: (value) => Array.isArray(value) && value.length > 0 
+            });
+            if (validator.validate(res)) return;
 
-            if (!targetLanguage || !type_platforms || !adm_channel_id) {
-                return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+            const admChannelsFilter = { ids: adm_channels };
+            const admChannels = await admChannelRepositry.getAllAdmChannels(admChannelsFilter);
+            if (admChannels.length < 1) {
+                return res.status(400).json({ error: 'Não foi localizado os Canais Administrativos!' });
             }
+
             const custom_name_channel = getChannelName(url, false);
             const channelId = await getChannelIdFromCustomUrl(url);
             if (!channelId) {
@@ -46,14 +60,14 @@ export default async function handler(req, res) {
                 language,
                 targetLanguage,
                 type_platforms,
-                adm_channel_id,
                 description,
                 image: channelDetails.image || '',
                 applied_videos: 0,
                 createdAt: new Date(),
                 targets,
                 vanityChannelUrl: channelDetails.vanityChannelUrl,
-                isFamilySafe : channelDetails.isFamilySafe 
+                isFamilySafe: channelDetails.isFamilySafe,
+                adm_channels: admChannels
             };
 
             const result = await channelRepository.insertChannel(newChannel);
@@ -122,7 +136,34 @@ export default async function handler(req, res) {
                 totalPages: Math.ceil(total / Number(limit)),
                 data: channels
             });
-        } else if (req.method == 'DELETE') {
+        } 
+        else if (req.method === 'PUT') {
+            const channelUpdates  = req.body;
+           
+            const validator = new Validation(req.body);
+        
+            validator.requireFields({
+                _id: (value) => typeof value === 'string'
+             
+            });
+        
+            
+            if (validator.validate(res)) return;
+        
+            try {
+                
+                const updateResult = await channelRepository.updateChannelAndVideos(channelUpdates);
+        
+                res.status(200).json({
+                    message: 'Canal e vídeos associados atualizados com sucesso.',
+                    result: updateResult,
+                });
+            } catch (error) {
+                console.error('Erro ao atualizar canal e vídeos associados:', error.message);
+                res.status(500).json({ error: `Erro ao atualizar o canal e vídeos associados. ${error.message}` });
+            }
+        }        
+        else if (req.method == 'DELETE') {
             const { channelId } = req.body;
 
             if (!channelId) {
