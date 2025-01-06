@@ -19,10 +19,10 @@ export class ChannelService extends BaseService {
                     'Content-Type': 'application/json'
                 },
                 {
-                    custom_name_channel: channels.custom_name_channel,
+                    url: channels.channelUrl,
                     targetLanguage: channels.targetLanguage,
                     type_platforms: channels.type_platforms,
-                    adm_channel_id: channels.adm_channel_id,
+                    adm_channels: channels.adm_channels,
                     targets: channels.targets
                 }
             );
@@ -31,6 +31,23 @@ export class ChannelService extends BaseService {
         } catch (error) {
             console.error('Erro ao criar canal:', error);
             return false;
+        }
+    }
+
+    static async getAdmChannels() {
+        try {
+            const response = await super.get({
+                url: '/api/adm-channels',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                allowCache: false
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Erro ao buscar canais administradores:', error);
+            return [];
         }
     }
 }

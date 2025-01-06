@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import './CreateChannelModal.css';
 import { ChannelService } from 'services/ChannelService';
@@ -8,31 +8,14 @@ const CreateChannelModal = ({ onChannelCreate }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [channelName, setChannelName] = useState('');
-    const [idChannel, setIdChannel] = useState('');
+    const [channelUrl, setChannelUrl] = useState('');
     const [channelLanguage, setChannelLanguage] = useState('');
     const [channelsType, setChannelsType] = useState([]);
     const [tags, setTags] = useState([]);
-
-    const handleDelete = (i) => {
-        setTags(tags.filter((tag, index) => index !== i));
-    };
-
-    const handleAddition = (tag) => {
-        setTags([...tags, tag]);
-    };
-
-    const handleSelectChange = (e) => {
-        const values = Array.from(e.target.selectedOptions, (option) => option.value);
-        setChannelsType(values);
-    };
-
-    const clearForm = () => {
-        setChannelName('');
-        setIdChannel('');
-        setChannelLanguage('');
-        setChannelsType([]);
-        setTags([]);
-    };
+    const [admChannelsIdList, setAdmChannelsIdList] = useState([]);
+    
+    const type_platforms = ['Youtube', 'TikTok', 'Twitch', 'Instagram'];
+    const [adminChannelsList, setAdminChannelsList] = useState([]);
 
     const languageMap = {
         en: 'Inglês',
@@ -65,16 +48,57 @@ const CreateChannelModal = ({ onChannelCreate }) => {
         vi: 'Vietnamita'
     };
 
-    const type_platforms = ['Youtube', 'TikTok', 'Twitch', 'Instagram'];
+    const handleTagsDelete = (i) => {
+        setTags(tags.filter((tag, index) => index !== i));
+    };
+
+    const handleTagsAddition = (tag) => {
+        setTags([...tags, tag]);
+    };
+
+    const handleChannelsTypeSelectChange = (e) => {
+        const values = Array.from(e.target.selectedOptions, (option) => option.value);
+        setChannelsType(values);
+    };
+    const handleAdminChannelsSelectChange = (e) => {
+        const values = Array.from(e.target.selectedOptions, (option) => option.value);
+        setAdmChannelsIdList(values);
+    };
+
+    const clearForm = () => {
+        setChannelName('');
+        setIdChannel('');
+        setChannelLanguage('');
+        setChannelsType([]);
+        setTags([]);
+    };
+
+    useEffect(() => {
+        getAdminChannels();
+    }, []);
+
+    const getAdminChannels = async () => {
+        try {
+            const channels = await ChannelService.getAdmChannels();
+            const channelsList = [];
+            channels.forEach((element) => {
+                channelsList.push({ name: element.channel_name_presentation, value: element._id });
+            });
+            setAdminChannelsList(channelsList);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     const createChannel = async () => {
         setIsLoading(true);
         try {
             const channelCreated = await ChannelService.createChannel({
                 custom_name_channel: channelName,
+                channelUrl: channelUrl,
                 targetLanguage: channelLanguage,
                 type_platforms: channelsType,
-                adm_channel_id: idChannel,
+                adm_channels: admChannelsIdList.map((e) => e),
                 targets: tags.map((e) => e.id)
             });
 
@@ -113,21 +137,33 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                                 type="text"
                                 className="form-control"
                                 id="exampleFormControlInput1"
-                                placeholder="Nome do Canal"
-                                value={channelName}
-                                onChange={(e) => setChannelName(e.target.value)}
+                                placeholder="URL do canal"
+                                value={channelUrl}
+                                onChange={(e) => setChannelUrl(e.target.value)}
                             />
                         </div>
 
                         <div className="mb-3">
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="exampleFormControlInput1"
-                                placeholder="ID do Canal"
-                                value={idChannel}
-                                onChange={(e) => setIdChannel(e.target.value)}
-                            />
+                            <select
+                                className="form-select"
+                                multiple
+                                onChange={handleAdminChannelsSelectChange}
+                                value={admChannelsIdList}
+                            >
+                                {adminChannelsList.map((item) => (
+                                    <option key={item.value} value={item.value}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                            {/* <ReactTags
+                                tags={admChannelsIdList}
+                                handleDelete={handleAdmChannelsDelete}
+                                handleAddition={handleAdmChannelsAddition}
+                                inputFieldPosition="top"
+                                autocomplete
+                                placeholder="Digite o ID do canal administrador e pressione enter"
+                            /> */}
                         </div>
 
                         <div className="mb-3">
@@ -149,7 +185,12 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                         </div>
 
                         <div className="mb-3">
-                            <select className="form-select" multiple onChange={handleSelectChange} value={channelsType}>
+                            <select
+                                className="form-select"
+                                multiple
+                                onChange={handleChannelsTypeSelectChange}
+                                value={channelsType}
+                            >
                                 {type_platforms.map((item) => (
                                     <option key={item} value={item}>
                                         {item}
@@ -161,9 +202,10 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                         <div className="mb-3">
                             <ReactTags
                                 tags={tags}
-                                handleDelete={handleDelete}
-                                handleAddition={handleAddition}
+                                handleDelete={handleTagsDelete}
+                                handleAddition={handleTagsAddition}
                                 inputFieldPosition="top"
+                                placeholder="Insira uma nova tag e pressione enter"
                                 autocomplete
                             />
                         </div>
