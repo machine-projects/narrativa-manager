@@ -64,12 +64,13 @@ export default async function handler(req, res) {
             if (!title || !channelId || !url || !publishedAt) {
                 return res.status(400).json({ error: 'Campos obrigatórios estão ausentes.' });
             }
-
             const newVideo = {
                 title,
                 channelId,
                 description: description || '',
                 url,
+                applied:false,
+                visible: true,
                 publishedAt: new Date(publishedAt),
                 createdAt: new Date()
             };
@@ -82,34 +83,20 @@ export default async function handler(req, res) {
             });
         } else if (req.method === 'PUT') {
             // Atualizar um vídeo por ID
-            const { id, updateChannelApplied = false, ...updateData } = req.body;
+            const { id,  ...updateData } = req.body;
 
             if (!id) {
                 return res.status(400).json({ error: 'O ID do vídeo é obrigatório.' });
             }
 
-            // Atualização básica do vídeo
-            const result = await videosRepository.collection.updateOne({ _id: id }, { $set: updateData });
+            const result = await videosRepository.update({ _id: id }, { $set: updateData });
 
             if (result.matchedCount === 0) {
                 return res.status(404).json({ error: 'Vídeo não encontrado.' });
             }
 
             let channelUpdateResult;
-            if (updateChannelApplied) {
-                // Obtém o vídeo atualizado
-                const video = await videosRepository.collection.findOne({ _id: id });
-                if (!video) {
-                    return res.status(404).json({ error: 'Vídeo não encontrado após atualização.' });
-                }
-
-                // Atualiza o campo applied_videos no canal
-                channelUpdateResult = await channelRepository.updateChannelAppliedVideosFromVideo(video);
-
-                // Atualiza o campo applied no vídeo
-                await videosRepository.collection.updateOne({ _id: id }, { $set: { applied: true } });
-            }
-
+           
             res.status(200).json({
                 message: 'Vídeo atualizado com sucesso.',
                 channelUpdate: channelUpdateResult
