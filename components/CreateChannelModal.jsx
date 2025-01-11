@@ -165,7 +165,6 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                                 placeholder="Digite o ID do canal administrador e pressione enter"
                             /> */}
                         </div>
-
                         <div className="mb-3">
                             <select
                                 className="form-select"
