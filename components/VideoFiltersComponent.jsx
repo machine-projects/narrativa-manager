@@ -1,117 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { languageMap } from '../lib/translate';
-// const languageMap = {
-//   "af": "Africâner",
-//   "am": "Amárico",
-//   "ar": "Árabe",
-//   "az": "Azeri",
-//   "be": "Bielorrusso",
-//   "bg": "Búlgaro",
-//   "bn": "Bengali",
-//   "bs": "Bósnio",
-//   "ca": "Catalão",
-//   "ceb": "Cebuano",
-//   "co": "Corso",
-//   "cs": "Tcheco",
-//   "cy": "Galês",
-//   "da": "Dinamarquês",
-//   "de": "Alemão",
-//   "el": "Grego",
-//   "en": "Inglês",
-//   "eo": "Esperanto",
-//   "es": "Espanhol",
-//   "et": "Estoniano",
-//   "eu": "Basco",
-//   "fa": "Persa",
-//   "fi": "Finlandês",
-//   "fr": "Francês",
-//   "fy": "Frísio",
-//   "ga": "Irlandês",
-//   "gd": "Gaélico Escocês",
-//   "gl": "Galego",
-//   "gu": "Guzerate",
-//   "ha": "Hauçá",
-//   "haw": "Havaiano",
-//   "he": "Hebraico",
-//   "hi": "Hindi",
-//   "hmn": "Hmong",
-//   "hr": "Croata",
-//   "ht": "Crioulo Haitiano",
-//   "hu": "Húngaro",
-//   "hy": "Armênio",
-//   "id": "Indonésio",
-//   "ig": "Igbo",
-//   "is": "Islandês",
-//   "it": "Italiano",
-//   "ja": "Japonês",
-//   "jw": "Javanês",
-//   "ka": "Georgiano",
-//   "kk": "Cazaque",
-//   "km": "Khmer",
-//   "kn": "Canarim",
-//   "ko": "Coreano",
-//   "ku": "Curdo",
-//   "ky": "Quirguiz",
-//   "la": "Latim",
-//   "lb": "Luxemburguês",
-//   "lo": "Lao",
-//   "lt": "Lituano",
-//   "lv": "Letão",
-//   "mg": "Malgaxe",
-//   "mi": "Maori",
-//   "mk": "Macedônio",
-//   "ml": "Malaiala",
-//   "mn": "Mongol",
-//   "mr": "Marata",
-//   "ms": "Malaio",
-//   "mt": "Maltês",
-//   "my": "Birmanês",
-//   "ne": "Nepalês",
-//   "nl": "Holandês",
-//   "no": "Norueguês",
-//   "ny": "Nianja",
-//   "or": "Oriá",
-//   "pa": "Punjabi",
-//   "pl": "Polonês",
-//   "ps": "Pachto",
-//   "pt": "Português",
-//   "ro": "Romeno",
-//   "ru": "Russo",
-//   "rw": "Kinyarwanda",
-//   "sd": "Sindi",
-//   "si": "Cingalês",
-//   "sk": "Eslovaco",
-//   "sl": "Esloveno",
-//   "sm": "Samoano",
-//   "sn": "Shona",
-//   "so": "Somali",
-//   "sq": "Albanês",
-//   "sr": "Sérvio",
-//   "st": "Soto do Sul",
-//   "su": "Sundanês",
-//   "sv": "Sueco",
-//   "sw": "Suaíli",
-//   "ta": "Tâmil",
-//   "te": "Telugu",
-//   "tg": "Tadjique",
-//   "th": "Tailandês",
-//   "tk": "Turcomeno",
-//   "tl": "Tagalo",
-//   "tr": "Turco",
-//   "tt": "Tártaro",
-//   "ug": "Uigur",
-//   "uk": "Ucraniano",
-//   "ur": "Urdu",
-//   "uz": "Uzbeque",
-//   "vi": "Vietnamita",
-//   "xh": "Xhosa",
-//   "yi": "Iídiche",
-//   "yo": "Iorubá",
-//   "zh": "Chinês (Simplificado)",
-//   "zh-TW": "Chinês (Tradicional)",
-//   "zu": "Zulu"
-// }
+
 
 const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
   const [admChannels, setAdmChannels] = useState([]);
@@ -153,7 +43,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
   // Manipulação de mudanças nos filtros
   const handleFilterChange = (e) => {
     const { name, value, options } = e.target;
-    if (name === "channel_ids") {
+    if (name === "channels_ids") {
       // Tratar seleção múltipla
       const selectedValues = Array.from(options)
         .filter((option) => option.selected)
@@ -184,13 +74,13 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
           </select>
         </div>
 
-        {/* Filtro de channel_ids com múltipla seleção */}
+        {/* Filtro de channels_ids com múltipla seleção */}
         <div className="col-md-3 mb-2">
           <select
-            name="channel_ids"
+            name="channels_ids"
             className="form-control"
             multiple
-            value={filters.channel_ids?.split(",") || []}
+            value={filters.channels_ids?.split(",") || []}
             onChange={handleFilterChange}
           >
             {channels.map((channel) => (
@@ -243,7 +133,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
         {Object.keys(filters).map(
           (filterKey) =>
             filterKey !== "adm_channel_id" &&
-            filterKey !== "channel_ids" &&
+            filterKey !== "channels_ids" &&
             filterKey !== "published_after" &&
             filterKey !== "published_before" && (
               <div className="col-md-3 mb-2" key={filterKey}>

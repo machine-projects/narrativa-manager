@@ -27,11 +27,16 @@ const Home = () => {
   const fetchVideos = async () => {
     setLoading(true);
     try {
+      // Filtra apenas os filtros com valores válidos
+      const validFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, value]) => value)
+      );
+  
       const { data } = await axios.get(`/api/videos`, {
         params: {
           page,
           limit: 10,
-          ...filters,
+          ...validFilters,
         },
       });
       setVideos(data.data);
@@ -42,6 +47,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchVideos();
