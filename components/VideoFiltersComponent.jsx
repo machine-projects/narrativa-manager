@@ -163,7 +163,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
         </div>
 
         {/* Outros filtros dinâmicos */}
-        {Object.keys(filters).map(
+        {/* {Object.keys(filters).map(
           (filterKey) =>
             filterKey !== "adm_channel_id" &&
             filterKey !== "channels_ids" &&
@@ -180,7 +180,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
                 />
               </div>
             )
-        )}
+        )} */}
 
         {/* Botão de aplicar filtros */}
         <div className="col-md-12">
