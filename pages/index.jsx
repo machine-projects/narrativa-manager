@@ -23,7 +23,6 @@ const Home = () => {
     channel_name: "",
     channel_name_presentation: "",
   });
-
   const fetchVideos = async () => {
     setLoading(true);
     try {
@@ -32,11 +31,22 @@ const Home = () => {
         Object.entries(filters).filter(([_, value]) => value)
       );
   
+      // Serializa arrays como strings separadas por vírgulas
+      const serializedFilters = {
+        ...validFilters,
+        channels_ids: Array.isArray(validFilters.channels_ids)
+          ? validFilters.channels_ids.join(",")
+          : validFilters.channels_ids,
+        targets: Array.isArray(validFilters.targets)
+          ? validFilters.targets.join(",")
+          : validFilters.targets,
+      };
+  
       const { data } = await axios.get(`/api/videos`, {
         params: {
           page,
           limit: 10,
-          ...validFilters,
+          ...serializedFilters,
         },
       });
       setVideos(data.data);
@@ -47,6 +57,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+  
   
 
   useEffect(() => {

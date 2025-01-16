@@ -90,7 +90,22 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
           </select>
         </div>
 
-      
+        {/* Filtro de channels_ids com múltipla seleção */}
+        <div className="col-md-3 mb-2">
+          <select
+            name="channels_ids"
+            className="form-control"
+            multiple
+            value={filters.channels_ids || []}
+            onChange={handleFilterChange}
+          >
+            {channels.map((channel) => (
+              <option key={channel._id} value={channel._id}>
+                {channel.channel_name_presentation}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Filtro de published_after */}
         <div className="col-md-3 mb-2">
@@ -129,22 +144,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
             ))}
           </select>
         </div>
-  {/* Filtro de channels_ids com múltipla seleção */}
-  <div className="col-md-3 mb-2">
-          <select
-            name="channels_ids"
-            className="form-control"
-            multiple
-            value={filters.channels_ids?.split(",") || []}
-            onChange={handleFilterChange}
-          >
-            {channels.map((channel) => (
-              <option key={channel._id} value={channel._id}>
-                {channel.channel_name_presentation}
-              </option>
-            ))}
-          </select>
-        </div>
+
          {/* Filtro de Marcadores (Targets) */}
          <div className="col-md-3 mb-2">
           <select
@@ -161,10 +161,9 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
             ))}
           </select>
         </div>
-        
 
         {/* Outros filtros dinâmicos */}
-        {/* {Object.keys(filters).map(
+        {Object.keys(filters).map(
           (filterKey) =>
             filterKey !== "adm_channel_id" &&
             filterKey !== "channels_ids" &&
@@ -181,7 +180,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
                 />
               </div>
             )
-        )} */}
+        )}
 
         {/* Botão de aplicar filtros */}
         <div className="col-md-12">
