@@ -8,6 +8,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
   const [channels, setChannels] = useState([]);
   const [loadingAdm, setLoadingAdm] = useState(false);
   const [loadingChannels, setLoadingChannels] = useState(false);
+  const [targets, setTargets] = useState([]);
 
   // Função para buscar canais administrados
   const fetchAdmChannels = async () => {
@@ -28,6 +29,8 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
     try {
       const { data } = await axios.get(`/api/channels?limit=50`);
       setChannels(data.data);
+      const allTargets = data.data.flatMap((channel) => channel.targets || []);
+      setTargets([...new Set(allTargets)]); 
     } catch (error) {
       console.error("Erro ao carregar canais:", error.message);
     } finally {
@@ -43,12 +46,12 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
   // Manipulação de mudanças nos filtros
   const handleFilterChange = (e) => {
     const { name, value, options } = e.target;
-    if (name === "channels_ids") {
+    if (name === "channels_ids" || name === "targets") {
       // Tratar seleção múltipla
       const selectedValues = Array.from(options)
         .filter((option) => option.selected)
         .map((option) => option.value);
-      setFilters({ ...filters, [name]: selectedValues.join(",") });
+      setFilters({ ...filters, [name]: selectedValues });
     } else {
       setFilters({ ...filters, [name]: value });
     }
@@ -57,6 +60,19 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
   return (
     <div className="filters mb-4">
       <div className="row">
+
+         {/* Filtro de keywords_in_title_presentation */}
+         <div className="col-md-3 mb-2">
+          <input
+            type="text"
+            name="keywords_in_title_presentation"
+            className="form-control"
+            placeholder="Buscar por título"
+            value={filters.keywords_in_title_presentation || ""}
+            onChange={handleFilterChange}
+          />
+        </div>
+
         {/* Filtro de adm_channel_id */}
         <div className="col-md-3 mb-2">
           <select
@@ -74,22 +90,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
           </select>
         </div>
 
-        {/* Filtro de channels_ids com múltipla seleção */}
-        <div className="col-md-3 mb-2">
-          <select
-            name="channels_ids"
-            className="form-control"
-            multiple
-            value={filters.channels_ids?.split(",") || []}
-            onChange={handleFilterChange}
-          >
-            {channels.map((channel) => (
-              <option key={channel._id} value={channel._id}>
-                {channel.channel_name_presentation}
-              </option>
-            ))}
-          </select>
-        </div>
+      
 
         {/* Filtro de published_after */}
         <div className="col-md-3 mb-2">
@@ -128,9 +129,42 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
             ))}
           </select>
         </div>
+  {/* Filtro de channels_ids com múltipla seleção */}
+  <div className="col-md-3 mb-2">
+          <select
+            name="channels_ids"
+            className="form-control"
+            multiple
+            value={filters.channels_ids?.split(",") || []}
+            onChange={handleFilterChange}
+          >
+            {channels.map((channel) => (
+              <option key={channel._id} value={channel._id}>
+                {channel.channel_name_presentation}
+              </option>
+            ))}
+          </select>
+        </div>
+         {/* Filtro de Marcadores (Targets) */}
+         <div className="col-md-3 mb-2">
+          <select
+            name="targets"
+            className="form-control"
+            multiple
+            value={filters.targets || []}
+            onChange={handleFilterChange}
+          >
+            {targets.map((target) => (
+              <option key={target} value={target}>
+                {target}
+              </option>
+            ))}
+          </select>
+        </div>
+        
 
         {/* Outros filtros dinâmicos */}
-        {Object.keys(filters).map(
+        {/* {Object.keys(filters).map(
           (filterKey) =>
             filterKey !== "adm_channel_id" &&
             filterKey !== "channels_ids" &&
@@ -147,7 +181,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
                 />
               </div>
             )
-        )}
+        )} */}
 
         {/* Botão de aplicar filtros */}
         <div className="col-md-12">

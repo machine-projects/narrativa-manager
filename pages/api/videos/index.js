@@ -25,6 +25,7 @@ export default async function handler(req, res) {
                 adm_channel_id,
                 channel_name,
                 channel_name_presentation
+                
             } = req.query;
             const filters = {
                 channel_id,
@@ -46,16 +47,11 @@ export default async function handler(req, res) {
                 return res.status(200).json({ total: videos.length, data: videos });
             }
 
-            const skip = (Number(page) - 1) * Number(limit);
-            const total = await videosRepository.countVideos();
-            const videos = await videosRepository.getPaginatedVideos(skip, Number(limit), filters);
+
+            const videos = await videosRepository.getPaginatedVideos(page, Number(limit), filters);
 
             res.status(200).json({
-                total,
-                page: Number(page),
-                limit: Number(limit),
-                totalPages: Math.ceil(total / Number(limit)),
-                data: videos
+                ...videos
             });
         } else if (req.method === 'POST') {
             // Adicionar um novo vídeo
