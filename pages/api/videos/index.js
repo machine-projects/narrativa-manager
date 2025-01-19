@@ -24,7 +24,8 @@ export default async function handler(req, res) {
                 type_platforms,
                 adm_channel_id,
                 channel_name,
-                channel_name_presentation
+                channel_name_presentation,
+                favorite
                 
             } = req.query;
             const filters = {
@@ -40,7 +41,8 @@ export default async function handler(req, res) {
                 type_platforms: type_platforms ? type_platforms.split(',') : undefined,
                 adm_channel_id,
                 channel_name,
-                channel_name_presentation
+                channel_name_presentation,
+                favorite
             };
             if (all === 'true') {
                 const videos = await videosRepository.getAllVideos();
