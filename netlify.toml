@@ -10,4 +10,7 @@ to = '/.netlify/images?url=:url&w=:width&q=:quality'
 status = 200
 force = true
 [functions]
-  timeout = 26
+  # Configurações gerais para funções
+  [functions.timeout]
+  # Define o tempo limite no máximo permitido (26 segundos)
+  duration = 26
