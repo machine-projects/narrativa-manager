@@ -72,7 +72,7 @@ export default async function handler(req, res) {
 
             const result = await channelRepository.insertChannel(newChannel);
 
-            const getSyncronize = await syncronize([channelId], 100, null, null);
+            const getSyncronize = await syncronize([channelId], 10, null, null);
             const num_syncronize = getSyncronize?.insertedCount ? getSyncronize.insertedCount : 0;
             res.status(201).json({
                 message: `Canal cadastrado com sucesso e sincronizado ${num_syncronize} itens`,
