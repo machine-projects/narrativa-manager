@@ -53,6 +53,13 @@ const NavBarComponent = ({ active }) => {
                   </span>
                 </Link>
                 </li>
+                <li className="nav-item">
+                <Link href="/Syncronize" passHref style={{textDecoration: 'none'}}>
+                  <span className={`nav-link ` + (active=='syncronize' ? 'active' : '')}>
+                    Sincronizar
+                  </span>
+                </Link>
+                </li>
               </ul>
             </div>
           </div>
