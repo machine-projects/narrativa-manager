@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import NavBarComponent from "./NavBarComponent";
 import VideoFiltersComponent from "./VideoFiltersComponent";
+import ExplorarVideosModal from "./ExplorarVideosModal";
 
-
- const VideoDisplayComponent = ({
+const VideoDisplayComponent = ({
   videos,
   loading,
   page,
@@ -13,6 +13,14 @@ import VideoFiltersComponent from "./VideoFiltersComponent";
   setFilters,
   fetchVideos,
 }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const handleExploreVideo = (video) => {
+    setSelectedVideo(video);
+    setModalOpen(true);
+  };
+
   return (
     <div>
       <NavBarComponent active="home" />
@@ -48,17 +56,15 @@ import VideoFiltersComponent from "./VideoFiltersComponent";
                       Visualizações: {video.views?.pretty || "N/A"}
                     </p>
                     <p className="card-text text-muted">
-                      Publicado em: {" "}
+                      Publicado em:{" "}
                       {new Date(video.published_at).toLocaleDateString() || "N/A"}
                     </p>
-                    <a
-                      href={video.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
                       className="btn btn-primary"
+                      onClick={() => handleExploreVideo(video)}
                     >
                       Explorar
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -87,7 +93,16 @@ import VideoFiltersComponent from "./VideoFiltersComponent";
           </button>
         </div>
       </div>
+
+      {/* Modal para explorar vídeo */}
+      {isModalOpen && selectedVideo && (
+        <ExplorarVideosModal
+          videoData={selectedVideo}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
+
 export default VideoDisplayComponent;
