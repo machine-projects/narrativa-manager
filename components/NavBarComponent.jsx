@@ -5,8 +5,8 @@ const NavBarComponent = ({ active }) => {
   return (
     <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
       <div className="container-fluid">
-        <Link href="/" passHref>
-          <a className="navbar-brand" style={{textDecoration: 'none'}}>Narrativa Manager</a>
+        <Link href="/" className="navbar-brand" style={{ textDecoration: 'none' }}>
+          Narrativa Manager
         </Link>
         <button
           className="navbar-toggler"
@@ -22,38 +22,28 @@ const NavBarComponent = ({ active }) => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link href="/" passHref>
-                <a className={`nav-link ${active === 'home' ? 'active' : ''}`} aria-current="page" style={{textDecoration: 'none'}}>
-                  Home
-                </a>
+              <Link href="/" className={`nav-link ${active === 'home' ? 'active' : ''}`} aria-current="page">
+                Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/CanaisAdm" passHref>
-                <a className={`nav-link ${active === 'canais-adm' ? 'active' : ''}`} style={{textDecoration: 'none'}}>
-                  Canais Administrativos
-                </a>
+              <Link href="/CanaisAdm" className={`nav-link ${active === 'canais-adm' ? 'active' : ''}`}>
+                Canais Administrativos
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/Canais" passHref>
-                <a className={`nav-link ${active === 'canais' ? 'active' : ''}`} style={{textDecoration: 'none'}}>
-                  Canais
-                </a>
+              <Link href="/Canais" className={`nav-link ${active === 'canais' ? 'active' : ''}`}>
+                Canais
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/Favoritos" passHref>
-                <a className={`nav-link ${active === 'favoritos' ? 'active' : ''}`} style={{textDecoration: 'none'}}>
-                  Favoritos
-                </a>
+              <Link href="/Favoritos" className={`nav-link ${active === 'favoritos' ? 'active' : ''}`}>
+                Favoritos
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/Syncronize" passHref>
-                <a className={`nav-link ${active === 'syncronize' ? 'active' : ''}`} style={{textDecoration: 'none'}}>
-                  Sincronizar
-                </a>
+              <Link href="/Syncronize" className={`nav-link ${active === 'syncronize' ? 'active' : ''}`}>
+                Sincronizar
               </Link>
             </li>
           </ul>

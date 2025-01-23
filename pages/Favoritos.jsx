@@ -22,17 +22,16 @@ const Home = () => {
     adm_channel_id: "",
     channel_name: "",
     channel_name_presentation: "",
-    favorite:"true"
+    favorite:true
   });
+
   const fetchVideos = async () => {
     setLoading(true);
     try {
-      // Filtra apenas os filtros com valores válidos
       const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([_, value]) => value)
       );
-  
-      // Serializa arrays como strings separadas por vírgulas
+
       const serializedFilters = {
         ...validFilters,
         channels_ids: Array.isArray(validFilters.channels_ids)
@@ -42,7 +41,7 @@ const Home = () => {
           ? validFilters.targets.join(",")
           : validFilters.targets,
       };
-  
+
       const { data } = await axios.get(`/api/videos`, {
         params: {
           page,
@@ -58,8 +57,6 @@ const Home = () => {
       setLoading(false);
     }
   };
-  
-  
 
   useEffect(() => {
     fetchVideos();
@@ -73,20 +70,18 @@ const Home = () => {
     }
   };
 
-  
-    return (
-      <VideoDisplayComponent
-        videos={videos}
-        loading={loading}
-        page={page}
-        totalPages={totalPages}
-        handlePageChange={handlePageChange}
-        filters={filters}
-        setFilters={setFilters}
-        fetchVideos={fetchVideos}
-      />
-    );
-
+  return (
+    <VideoDisplayComponent
+      videos={videos}
+      loading={loading}
+      page={page}
+      totalPages={totalPages}
+      handlePageChange={handlePageChange}
+      filters={filters}
+      setFilters={setFilters}
+      fetchVideos={fetchVideos}
+    />
+  );
 };
 
 export default Home;
