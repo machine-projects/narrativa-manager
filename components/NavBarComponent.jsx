@@ -7,7 +7,7 @@ const NavBarComponent = ({ active }) => {
           className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark"
         >
           <div className="container-fluid">
-            <a className="navbar-brand" href="#">
+            <a className="navbar-brand" href="/">
               Narrativa Manager
             </a>
             <button
