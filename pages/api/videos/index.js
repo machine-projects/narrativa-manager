@@ -81,13 +81,13 @@ export default async function handler(req, res) {
             });
         } else if (req.method === 'PUT') {
             // Atualizar um vídeo por ID
-            const { id,  ...updateData } = req.body;
+            const {  ...updateData } = req.body;
 
-            if (!id) {
+            if (!updateData._id) {
                 return res.status(400).json({ error: 'O ID do vídeo é obrigatório.' });
             }
 
-            const result = await videosRepository.update({ _id: id }, { $set: updateData });
+            const result = await videosRepository.update( updateData);
 
             if (result.matchedCount === 0) {
                 return res.status(404).json({ error: 'Vídeo não encontrado.' });
