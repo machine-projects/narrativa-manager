@@ -23,13 +23,13 @@ const NavBarComponent = ({ active }) => {
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
-                <li className="nav-item">
-                <Link href="/" passHref style={{textDecoration: 'none'}}>
-                <span className={`nav-link ${active === 'home' ? 'active' : ''}`} aria-current="page">
+              <li className="nav-item">
+              <Link href="/" passHref>
+                <a className={`nav-link ${active === 'home' ? 'active' : ''}`} aria-current="page" style={{ textDecoration: 'none' }}>
                   Home
-                </span>
+                </a>
               </Link>
-                </li>
+            </li>
 
                 <li className="nav-item">
                 <Link href="/CanaisAdm" passHref style={{textDecoration: 'none'}}>
