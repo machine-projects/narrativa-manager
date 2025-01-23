@@ -24,8 +24,8 @@ const IndexSincronize = () => {
   const [syncParams, setSyncParams] = useState({
     channels_ids: [],
     num_syncronize: 50,
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("T")[0],
+    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("T")[0],
+    endDate: new Date().toISOString().split("T")[0],
   });
 
   const listSyncronize = async (page) => {
@@ -61,7 +61,14 @@ const IndexSincronize = () => {
 
   const handleSynchronization = async () => {
     try {
-      const response = await axios.post("/api/videos/syncronize", syncParams);
+      const syncPayload = {
+        ...syncParams,
+        startDate: new Date(syncParams.startDate).toISOString(),
+        endDate: new Date(syncParams.endDate).toISOString(),
+      };
+  
+      console.log("Payload enviado:", syncPayload); // Para depuração
+      const response = await axios.post("/api/videos/syncronize", syncPayload);
       alert("Sincronização realizada com sucesso!");
       listSyncronize(1);
     } catch (error) {
@@ -69,6 +76,7 @@ const IndexSincronize = () => {
       alert("Erro ao sincronizar os dados.");
     }
   };
+  
 
   const formatDate = (date) => {
     const dateObject = new Date(date);
@@ -97,7 +105,7 @@ const IndexSincronize = () => {
         <h2>Sincronização de Dados</h2>
         <div className="row mb-4">
           <div className="col-12">
-          <h5>Menu de Sincronização</h5>
+            <h5>Menu de Sincronização</h5>
             <div className="row g-2">
               <div className="col-md-4">
                 <label htmlFor="channels_ids" className="form-label">
@@ -283,29 +291,40 @@ const IndexSincronize = () => {
             </tr>
           </thead>
           <tbody>
-            {data.length > 0 ? (
-              data.map((item) => (
-                <tr key={item._id}>
-                  <td>{formatDate(item.date)}</td>
-                  <td>
-                    {item.channels.map((channel) => (
-                      <div key={channel._id}>                        
-                        <strong>{channel.channel_name_presentation}</strong> - <small>{channel.channelId}</small>
-                      </div>
-                    ))}
-                  </td>
-                  <td>{item.videosUpdate.length}</td>
-                  <td>{item.videosInsert[0] ? Object.keys(item.videosInsert[0]).length : 0}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" className="text-center">
-                  Nenhum dado encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
+  {data.length > 0 ? (
+    data.map((item) => (
+      <tr key={item._id}>
+        <td>{item.date ? formatDate(item.date) : "Data inválida"}</td>
+        <td>
+          {Array.isArray(item.channels) ? (
+            item.channels.map((channel) => (
+              <div key={channel._id}>
+                <strong>{channel.channel_name_presentation}</strong> - <small>{channel.channelId}</small>
+              </div>
+            ))
+          ) : (
+            <span>Nenhum canal disponível</span>
+          )}
+        </td>
+        <td>
+          {Array.isArray(item.videosUpdate) ? item.videosUpdate.length : 0}
+        </td>
+        <td>
+          {Array.isArray(item.videosInsert) && item.videosInsert[0]
+            ? Object.keys(item.videosInsert[0]).length
+            : 0}
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="4" className="text-center">
+        Nenhum dado encontrado.
+      </td>
+    </tr>
+  )}
+</tbody>
+
         </table>
 
         <PaginateComponent
