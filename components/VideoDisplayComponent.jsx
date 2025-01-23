@@ -40,25 +40,55 @@ const VideoDisplayComponent = ({
         ) : (
           <div className="row">
             {videos.map((video) => (
-              <div className="col-md-4 mb-3" key={video._id}>
+              <div className="col-md-4 mb-3" key={video?._id || Math.random()}>
                 <div className="card">
+                  {/* Validação de imagem */}
                   <img
-                    src={video.thumbnails[3]?.url || video.image}
-                    alt={video.title}
+                    src={
+                      Array.isArray(video?.thumbnails) && video.thumbnails[3]?.url
+                        ? video.thumbnails[3].url
+                        : video?.image || "default-image.jpg"
+                    }
+                    alt={typeof video?.title === "string" ? video.title : "Sem título"}
                     className="card-img-top"
                   />
+
                   <div className="card-body">
-                    <h5 className="card-title">{video.title_presentation}</h5>
+                    {/* Validação do título */}
+                    <h5 className="card-title">
+                      {typeof video?.title_presentation === "string" ||
+                      typeof video?.title_presentation === "number"
+                        ? video.title_presentation
+                        : "Título inválido"}
+                    </h5>
+
+                    {/* Validação do canal */}
                     <p className="card-text text-muted">
-                      Canal: {video.channel?.channel_name_presentation || "N/A"}
+                      Canal:{" "}
+                      {typeof video?.channel?.channel_name_presentation === "string"
+                        ? video.channel.channel_name_presentation
+                        : "N/A"}
                     </p>
+
+                    {/* Validação das visualizações */}
                     <p className="card-text text-muted">
-                      Visualizações: {video.views?.pretty || "N/A"}
+                      Visualizações:{" "}
+                      {typeof video?.views?.pretty === "string" ||
+                      typeof video?.views?.pretty === "number"
+                        ? video.views.pretty
+                        : "N/A"}
                     </p>
+
+                    {/* Validação da data de publicação */}
                     <p className="card-text text-muted">
                       Publicado em:{" "}
-                      {new Date(video.published_at).toLocaleDateString() || "N/A"}
+                      {video?.published_at &&
+                      !isNaN(new Date(video.published_at).getTime())
+                        ? new Date(video.published_at).toLocaleDateString()
+                        : "Data inválida"}
                     </p>
+
+                    {/* Botão para explorar */}
                     <button
                       className="btn btn-primary"
                       onClick={() => handleExploreVideo(video)}
@@ -82,7 +112,8 @@ const VideoDisplayComponent = ({
             Anterior
           </button>
           <span>
-            Página {page} de {totalPages}
+            Página {typeof page === "number" ? page : 1} de{" "}
+            {typeof totalPages === "number" ? totalPages : 1}
           </span>
           <button
             className="btn btn-secondary"

@@ -1,4 +1,4 @@
-import { syncronize, getSyncronize } from "../../../lib/youtube/syncronizeService";
+import { syncronize, getSyncronize } from "../../../../lib/youtube/syncronizeService";
 
 export default async function handler(req, res) {
   if (req.method == "POST") {

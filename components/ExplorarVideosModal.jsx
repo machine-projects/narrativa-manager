@@ -3,19 +3,30 @@ import PropTypes from "prop-types";
 import axios from "axios";
 
 const ExplorarVideosModal = ({ videoData, onClose }) => {
-  const [visible, setVisible] = useState(videoData.visible);
-  const [favorite, setFavorite] = useState(videoData.favorite);
-  const [applied, setApplied] = useState(videoData.applied_videos);
+  // Validações iniciais para garantir que os dados existam antes de usar
+  const [visible, setVisible] = useState(
+    typeof videoData?.visible === "boolean" ? videoData.visible : false
+  );
+  const [favorite, setFavorite] = useState(
+    typeof videoData?.favorite === "boolean" ? videoData.favorite : false
+  );
+  const [applied, setApplied] = useState(
+    typeof videoData?.applied_videos === "boolean" ? videoData.applied_videos : false
+  );
   const [isModified, setIsModified] = useState(false);
 
   const handleApply = async () => {
     try {
       const payload = {
-        _id: videoData._id,
+        _id: videoData?._id || null,
         visible,
         favorite,
         applied,
       };
+
+      if (!payload._id) {
+        throw new Error("ID do vídeo é inválido ou está ausente.");
+      }
 
       await axios.post("/api/videos", payload);
 
@@ -37,19 +48,31 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
       <div className="modal-dialog modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{videoData.title_presentation}</h5>
+            <h5 className="modal-title">
+              {typeof videoData?.title_presentation === "string"
+                ? videoData.title_presentation
+                : "Título não disponível"}
+            </h5>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
             <div className="mb-3 text-center">
-              <iframe
-                src={videoData.embed.iframeUrl}
-                title={videoData.title_presentation}
-                width="100%"
-                height="400"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
+              {videoData?.embed?.iframeUrl && typeof videoData.embed.iframeUrl === "string" ? (
+                <iframe
+                  src={videoData.embed.iframeUrl}
+                  title={
+                    typeof videoData?.title_presentation === "string"
+                      ? videoData.title_presentation
+                      : "Vídeo"
+                  }
+                  width="100%"
+                  height="400"
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <p>O link do vídeo não está disponível.</p>
+              )}
             </div>
             <div className="form-check">
               <input
@@ -112,7 +135,16 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
 };
 
 ExplorarVideosModal.propTypes = {
-  videoData: PropTypes.object.isRequired,
+  videoData: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title_presentation: PropTypes.string,
+    visible: PropTypes.bool,
+    favorite: PropTypes.bool,
+    applied_videos: PropTypes.bool,
+    embed: PropTypes.shape({
+      iframeUrl: PropTypes.string,
+    }),
+  }).isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
