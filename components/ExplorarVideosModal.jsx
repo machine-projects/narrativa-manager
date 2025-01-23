@@ -17,18 +17,18 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
 
   const handleApply = async () => {
     try {
-      const payload = {
-        _id: videoData?._id || null,
-        visible,
-        favorite,
-        applied,
-      };
+      const payload = {...videoData}
+      payload.visible = visible
+      payload.favorite = favorite
+      payload.applied = applied
+      //payload.channelId = videoData.channel_id
+      
 
       if (!payload._id) {
         throw new Error("ID do vídeo é inválido ou está ausente.");
       }
 
-      await axios.post("/api/videos", payload);
+      await axios.put("/api/videos", payload);
 
       alert("Alterações aplicadas com sucesso!");
       setIsModified(false);

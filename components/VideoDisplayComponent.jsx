@@ -73,9 +73,9 @@ const VideoDisplayComponent = ({
                     {/* Validação das visualizações */}
                     <p className="card-text text-muted">
                       Visualizações:{" "}
-                      {typeof video?.views?.pretty === "string" ||
+                      {typeof video?.views?.text === "string" ||
                       typeof video?.views?.pretty === "number"
-                        ? video.views.pretty
+                        ? video.views.text
                         : "N/A"}
                     </p>
 
