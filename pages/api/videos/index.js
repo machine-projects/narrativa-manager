@@ -25,7 +25,8 @@ export default async function handler(req, res) {
                 adm_channel_id,
                 channel_name,
                 channel_name_presentation,
-                favorite
+                favorite,
+                visible
                 
             } = req.query;
             const filters = {
@@ -42,7 +43,8 @@ export default async function handler(req, res) {
                 adm_channel_id,
                 channel_name,
                 channel_name_presentation,
-                favorite
+                favorite,
+                visible
             };
             if (all === 'true') {
                 const videos = await videosRepository.getAllVideos();

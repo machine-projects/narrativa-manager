@@ -20,6 +20,7 @@ const VideoDisplayComponent = ({
     setSelectedVideo(video);
     setModalOpen(true);
   };
+  
 
   return (
     <div>

@@ -47,9 +47,9 @@ export default async function handler(req, res) {
             }
 
             const language = targetLanguageToPortuguese(targetLanguage);
-            const channel_name_presentation = await translateToPortuguese(targetLanguage, channelDetails.title);
+            const channel_name_presentation = await translateToPortuguese(channelDetails.title);
             const description = channelDetails.description
-                ? await translateToPortuguese(targetLanguage, channelDetails.description)
+                ? await translateToPortuguese(channelDetails.description)
                 : '';
 
             const newChannel = {
