@@ -5,13 +5,15 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
   const [channels, setChannels] = useState([]); // Estado para os canais
   const [loading, setLoading] = useState(false);
 
-  const [syncParams, setSyncParams] = useState({
+  const initialSyncParams = {
     channels_ids: [],
     num_syncronize: 50,
-    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("T")[0],
-    endDate: new Date().toISOString().split("T")[0],
+    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("T")[0], // 7 dias antes
+    endDate: new Date().toISOString().split("T")[0], // Data atual
     visible: "", // Incluímos a opção `visible`
-  });
+  };
+
+  const [syncParams, setSyncParams] = useState({ ...initialSyncParams });
 
   const handleSynchronization = async () => {
     try {
@@ -58,6 +60,17 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
     }));
   };
 
+  const handleClearFilters = () => {
+    setSyncParams({
+      ...syncParams,
+      channels_ids: [],
+      num_syncronize: "",
+      startDate: null,
+      endDate: null,
+      visible: "",
+    });
+  };
+
   useEffect(() => {
     fetchChannels();
   }, [filters]);
@@ -66,7 +79,7 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
     <div className="row mb-4">
       <div className="col-12">
         <h5>Menu de Sincronização</h5>
-        <div className="row g-2">
+        <div className="row g-3">
           <div className="col-md-4">
             <label htmlFor="channels_ids" className="form-label">
               Canais
@@ -114,7 +127,7 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
               id="startDate"
               name="startDate"
               className="form-control"
-              value={syncParams.startDate}
+              value={syncParams.startDate || ""}
               onChange={handleSyncParamChange}
             />
           </div>
@@ -127,7 +140,7 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
               id="endDate"
               name="endDate"
               className="form-control"
-              value={syncParams.endDate}
+              value={syncParams.endDate || ""}
               onChange={handleSyncParamChange}
             />
           </div>
@@ -150,13 +163,23 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
             </select>
           </div>
 
-          <div className="col-md-12 mt-2">
+          {/* Botões de Sincronizar e Limpar Filtros */}
+          <div className="col-md-12 d-flex justify-content-between mt-3">
+           
             <button
-              className="btn btn-success w-100"
+              className="btn btn-success flex-grow-1 me-2 col-8"
               onClick={handleSynchronization}
               disabled={loading}
+              style={{ fontWeight: "bold" }}
             >
               {loading ? "Sincronizando..." : "Iniciar Sincronização"}
+            </button>
+            <button
+              className="btn btn-secondary flex-grow-1 col"
+              onClick={handleClearFilters}
+              disabled={loading}
+            >
+              Limpar Filtros
             </button>
           </div>
         </div>
