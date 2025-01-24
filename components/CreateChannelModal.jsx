@@ -67,12 +67,13 @@ const CreateChannelModal = ({ onChannelCreate }) => {
 
     const clearForm = () => {
         setChannelName('');
-        setIdChannel('');
+        setChannelUrl(''); // Limpa o URL do canal
         setChannelLanguage('');
         setChannelsType([]);
         setTags([]);
+        setAdmChannelsIdList([]);
     };
-
+    
     useEffect(() => {
         getAdminChannels();
     }, []);
@@ -99,21 +100,26 @@ const CreateChannelModal = ({ onChannelCreate }) => {
                 targetLanguage: channelLanguage,
                 type_platforms: channelsType,
                 adm_channels: admChannelsIdList.map((e) => e),
-                targets: tags.map((e) => e.id)
+                targets: tags.map((e) => e.id),
             });
-
-            if (channelCreated) {
+    console.log('channelCreated',channelCreated)
+            if (channelCreated && channelCreated.statusCode == 201  && channelCreated.data.channel) {
+                // Passar o objeto do canal criado para o `onChannelCreate`
+                onChannelCreate(channelCreated.data.channel);
                 alert('Canal criado com sucesso!');
                 closeModalButtonRef.current.click();
-                onChannelCreate(true);
                 clearForm();
+            } else {
+                throw new Error("O canal não foi criado corretamente.");
             }
         } catch (error) {
-            alert('Erro: ' + error);
+            console.error("Erro ao criar o canal:", error);
+            alert('Erro: ' + error.message || "Erro desconhecido.");
         } finally {
             setIsLoading(false);
         }
     };
+    
 
     return (
         <div

@@ -27,7 +27,7 @@ export class ChannelService extends BaseService {
                 }
             );
             
-            return response.statusCode === 201;
+            return response
         } catch (error) {
             console.error('Erro ao criar canal:', error);
             return false;
