@@ -22,6 +22,7 @@ const Home = () => {
     adm_channel_id: "",
     channel_name: "",
     channel_name_presentation: "",
+    visible: ""
   });
 
   const fetchVideos = async () => {
@@ -30,9 +31,10 @@ const Home = () => {
       const validFilters = Object.fromEntries(
         Object.entries(filters).filter(([_, value]) => value)
       );
-
+  
       const serializedFilters = {
         ...validFilters,
+        visible: validFilters.visible === "true" ? true : validFilters.visible === "false" ? false : undefined, // Converte string para booleano
         channels_ids: Array.isArray(validFilters.channels_ids)
           ? validFilters.channels_ids.join(",")
           : validFilters.channels_ids,
@@ -40,7 +42,7 @@ const Home = () => {
           ? validFilters.targets.join(",")
           : validFilters.targets,
       };
-
+  
       const { data } = await axios.get(`/api/videos`, {
         params: {
           page,
@@ -56,6 +58,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchVideos();
