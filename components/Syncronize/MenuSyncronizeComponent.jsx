@@ -7,7 +7,7 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
 
   const initialSyncParams = {
     channels_ids: [],
-    num_syncronize: 50,
+    num_syncronize: 12,
     startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split("T")[0], // 7 dias antes
     endDate: new Date().toISOString().split("T")[0], // Data atual
     visible: "", // Incluímos a opção `visible`
