@@ -3,7 +3,7 @@ import NavBarComponent from "../components/NavBarComponent";
 import CreateChannelModal from "../components/CreateChannelModal";
 import PaginateComponent from "components/PaginateComponent";
 import { ChannelService } from "services/ChannelService";
-import axios from "axios";
+
 
 const CadastrarCanal = () => {
   const [channels, setChannels] = React.useState([]);
@@ -57,11 +57,11 @@ const CadastrarCanal = () => {
   const handleChannelSynchronization = async (channelId, admChannels) => {
     try {
       const syncPayload = {
-        num_syncronize: 15,
+        num_syncronize: 50,
         channels_ids: [channelId],
       };
+      await ChannelService.syncronizeChannel(syncPayload);
 
-      await axios.post("/api/videos/syncronize", syncPayload);
     } catch (error) {
       console.error("Erro ao sincronizar canal:", error);
       throw new Error("Erro durante a sincronização do canal.");
