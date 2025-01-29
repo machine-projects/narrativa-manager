@@ -33,6 +33,27 @@ export class ChannelService extends BaseService {
             return false;
         }
     }
+    static async syncronizeChannel(payload) {
+        try {
+ 
+            const apiUrl = process.env.NEXT_PUBLIC_API_VIDEOS_SYNC
+            ? process.env.NEXT_PUBLIC_API_VIDEOS_SYNC
+            : "/api/videos/syncronize";
+
+            const response = await super.post(
+                apiUrl,
+                {
+                    'Content-Type': 'application/json'
+                },
+                payload
+            );
+            
+            return response
+        } catch (error) {
+            console.error('Erro ao criar canal:', error);
+            return false;
+        }
+    }
 
     static async getAdmChannels() {
         try {

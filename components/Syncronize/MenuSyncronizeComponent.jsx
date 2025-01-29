@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { ChannelService } from "services/ChannelService";
 
 const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
   const [channels, setChannels] = useState([]); // Estado para os canais
@@ -28,7 +29,7 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
 
       console.log("Payload enviado:", syncPayload); // Para depuração
       // const response = await axios.post("/api/videos/syncronize", syncPayload);
-      const response = await axios.post("https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-94b62a4a-33d4-4ab6-a51d-f837f55e4cba/narrativa-manager/sync", syncPayload);
+      const response = await ChannelService.syncronizeChannel(syncPayload);
       alert("Sincronização realizada com sucesso!");
       listSyncronize(1);
     } catch (error) {
