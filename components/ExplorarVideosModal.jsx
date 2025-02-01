@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
+import VideoDownloads from "./VideoDownloads"; 
 
 const ExplorarVideosModal = ({ videoData, onClose }) => {
   // Validações iniciais para garantir que os dados existam antes de usar
@@ -17,12 +18,10 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
 
   const handleApply = async () => {
     try {
-      const payload = {...videoData}
-      payload.visible = visible
-      payload.favorite = favorite
-      payload.applied = applied
-      //payload.channelId = videoData.channel_id
-      
+      const payload = { ...videoData };
+      payload.visible = visible;
+      payload.favorite = favorite;
+      payload.applied = applied;
 
       if (!payload._id) {
         throw new Error("ID do vídeo é inválido ou está ausente.");
@@ -74,6 +73,10 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
                 <p>O link do vídeo não está disponível.</p>
               )}
             </div>
+
+            {/* Usando o componente VideoDownloads */}
+            <VideoDownloads videoUrl={videoData.url} />
+
             <div className="form-check">
               <input
                 type="checkbox"
@@ -144,6 +147,7 @@ ExplorarVideosModal.propTypes = {
     embed: PropTypes.shape({
       iframeUrl: PropTypes.string,
     }),
+    url: PropTypes.string, // Adicionado para a URL do vídeo
   }).isRequired,
   onClose: PropTypes.func.isRequired,
 };
