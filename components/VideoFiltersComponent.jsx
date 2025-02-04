@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { languageMap } from "../lib/translate";
 
-const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
+const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters, setPage  }) => {
   const [admChannels, setAdmChannels] = useState([]);
   const [channels, setChannels] = useState([]);
   const [loadingAdm, setLoadingAdm] = useState(false);
@@ -51,32 +51,33 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
         .filter((option) => option.selected)
         .map((option) => option.value);
       setFilters({ ...filters, [name]: selectedValues });
-    } else if (name === "visible") {
-      // Tratar visibilidade como string
+    } else if (name === "visible" || name === "applied") {
+      // Tratar valores como string corretamente
       if (value === "true" || value === "false") {
-        setFilters({ ...filters, visible: value });
+        setFilters({ ...filters, [name]: value });
       } else {
         const newFilters = { ...filters };
-        delete newFilters.visible; // Remove o filtro se nenhum for selecionado
+        delete newFilters[name]; // Remove o filtro se nenhum for selecionado
         setFilters(newFilters);
       }
     } else {
       setFilters({ ...filters, [name]: value });
     }
   };
-  
   const handleClearFilters = () => {
     setFilters({});
+    setPage(1);
   };
   
   const applyFilters = () => {
+    setPage(1);
     const appliedFilters = { ...filters };
   
     // Enviar filtros com o campo `visible` tratado como string
     if (appliedFilters.visible === undefined) {
       delete appliedFilters.visible;
     }
-  
+    
     onApplyFilters(appliedFilters);
   };
 
@@ -216,11 +217,25 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters }) => {
   </select>
 </div>
 
-
-
+  {/* Filtro de Applied (true/false) */}
+  <div className="col-md-3 mb-2">
+          <label htmlFor="applied">Aplicado</label>
+          <select
+            id="applied"
+            name="applied"
+            className="form-control"
+            value={filters.applied || ""}
+            onChange={handleFilterChange}
+          >
+            <option value="">Todos</option>
+            <option value="true">Aplicado</option>
+            <option value="false">Não Aplicado</option>
+          </select>
+        </div>
+        <div className="col-md-12 mt-3"></div>
         {/* Botões de aplicar e limpar filtros */}
         <div className="col-md-6 mt-3">
-          <button className="btn btn-primary w-100" onClick={onApplyFilters}>
+          <button className="btn btn-primary w-100" onClick={applyFilters}>
             Aplicar Filtros
           </button>
         </div>

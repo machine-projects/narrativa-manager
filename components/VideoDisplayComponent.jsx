@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReactCountryFlag from "react-country-flag"; // Importe o componente de bandeira
+import { FaCheckCircle } from "react-icons/fa";
 import NavBarComponent from "./NavBarComponent";
 import VideoFiltersComponent from "./VideoFiltersComponent";
 import ExplorarVideosModal from "./ExplorarVideosModal";
@@ -8,6 +9,7 @@ const VideoDisplayComponent = ({
   videos,
   loading,
   page,
+  setPage,
   totalPages,
   handlePageChange,
   filters,
@@ -150,6 +152,7 @@ const VideoDisplayComponent = ({
           filters={filters}
           setFilters={setFilters}
           onApplyFilters={fetchVideos}
+          setPage={setPage}
         />
 
         {/* Exibição de vídeos */}
@@ -159,9 +162,21 @@ const VideoDisplayComponent = ({
           <div className="row">
             {videos.map((video) => (
               <div className="col-md-4 mb-3" key={video?._id || Math.random()}>
-                <div className="card">
+                <div className="card"   style={{ backgroundColor: video?.applied ? "#f0f0f0" : "white" }}>
                   {/* Container da imagem com a bandeira */}
                   <div style={{ position: "relative" }}>
+                  {video?.applied && (
+                      <FaCheckCircle
+                        style={{
+                          position: "absolute",
+                          top: "10px",
+                          right: "10px",
+                          color: "green",
+                          fontSize: "24px",
+                          zIndex: 2,
+                        }}
+                      />
+                    )}
                     {/* Bandeira do país */}
                     {video?.channel?.targetLanguage && (
                       <div

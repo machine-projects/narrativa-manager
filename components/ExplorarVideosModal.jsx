@@ -12,7 +12,7 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
     typeof videoData?.favorite === "boolean" ? videoData.favorite : false
   );
   const [applied, setApplied] = useState(
-    typeof videoData?.applied_videos === "boolean" ? videoData.applied_videos : false
+    typeof videoData?.applied === "string" ? videoData.applied : "false"
   );
   const [isModified, setIsModified] = useState(false);
 

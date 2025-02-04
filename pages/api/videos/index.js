@@ -26,7 +26,8 @@ export default async function handler(req, res) {
                 channel_name,
                 channel_name_presentation,
                 favorite,
-                visible
+                visible,
+                applied
                 
             } = req.query;
             const filters = {
@@ -44,7 +45,8 @@ export default async function handler(req, res) {
                 channel_name,
                 channel_name_presentation,
                 favorite,
-                visible
+                visible,
+                applied
             };
             if (all === 'true') {
                 const videos = await videosRepository.getAllVideos();
@@ -69,7 +71,7 @@ export default async function handler(req, res) {
                 channelId,
                 description: description || '',
                 url,
-                applied:false,
+                applied:"false",
                 visible: true,
                 publishedAt: new Date(publishedAt),
                 createdAt: new Date()

@@ -77,6 +77,7 @@ const Home = () => {
       videos={videos}
       loading={loading}
       page={page}
+      setPage={setPage}
       totalPages={totalPages}
       handlePageChange={handlePageChange}
       filters={filters}

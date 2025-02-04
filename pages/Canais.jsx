@@ -110,7 +110,7 @@ const CadastrarCanal = () => {
                       className="rounded"
                     />
                   </td>
-                  <td>{channel.channel_name_presentation}</td>
+                  <td> <a href={"/Canal?channelId="+channel.channelId}>{channel.channel_name_presentation} </a></td>
                   <td>{channel.language}</td>
                   <td>
                     {channel.adm_channels
