@@ -12,8 +12,9 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
     typeof videoData?.favorite === "boolean" ? videoData.favorite : false
   );
   const [applied, setApplied] = useState(
-    typeof videoData?.applied === "string" ? videoData.applied : "false"
+    typeof videoData?.applied === "boolean" ? videoData.applied : false
   );
+  
   const [isModified, setIsModified] = useState(false);
 
   const handleApply = async () => {
@@ -102,13 +103,14 @@ const ExplorarVideosModal = ({ videoData, onClose }) => {
               </label>
             </div>
             <div className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="appliedCheckbox"
-                checked={applied}
-                onChange={(e) => handleChange(setApplied, e.target.checked)}
-              />
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="appliedCheckbox"
+              checked={applied}
+              onChange={(e) => handleChange(setApplied, e.target.checked)} // Convertendo para booleano corretamente
+            />
+
               <label className="form-check-label" htmlFor="appliedCheckbox">
                 Aplicado
               </label>
