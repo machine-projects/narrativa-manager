@@ -28,7 +28,6 @@ export default async function handler(req, res) {
                 favorite,
                 visible,
                 applied
-                
             } = req.query;
             const filters = {
                 channel_id,
@@ -53,12 +52,19 @@ export default async function handler(req, res) {
                 return res.status(200).json({ total: videos.length, data: videos });
             }
 
+            const limitNumber = Number(limit);
+const videos = await videosRepository.getPaginatedVideos(page, limitNumber, filters);
 
-            const videos = await videosRepository.getPaginatedVideos(page, Number(limit), filters);
+if (limitNumber === 1 && channel_id) {
+    if (videos.data?.length) {
+        return res.status(200).json(videos.data[0]); // Corrigido para pegar o primeiro item corretamente
+    }
+    return res.status(404).json({ message: 'Vídeo não encontrado' });
+}
 
-            res.status(200).json({
-                ...videos
-            });
+// Retorna a lista de vídeos normalmente
+return res.status(200).json(videos);
+
         } else if (req.method === 'POST') {
             // Adicionar um novo vídeo
             const { title, channelId, description, url, publishedAt } = req.body;
@@ -71,7 +77,7 @@ export default async function handler(req, res) {
                 channelId,
                 description: description || '',
                 url,
-                applied:"false",
+                applied: 'false',
                 visible: true,
                 publishedAt: new Date(publishedAt),
                 createdAt: new Date()
@@ -85,20 +91,20 @@ export default async function handler(req, res) {
             });
         } else if (req.method === 'PUT') {
             // Atualizar um vídeo por ID
-            const {  ...updateData } = req.body;
+            const { ...updateData } = req.body;
 
             if (!updateData._id) {
                 return res.status(400).json({ error: 'O ID do vídeo é obrigatório.' });
             }
 
-            const result = await videosRepository.update( updateData);
+            const result = await videosRepository.update(updateData);
 
             if (result.matchedCount === 0) {
                 return res.status(404).json({ error: 'Vídeo não encontrado.' });
             }
 
             let channelUpdateResult;
-           
+
             res.status(200).json({
                 message: 'Vídeo atualizado com sucesso.',
                 channelUpdate: channelUpdateResult
