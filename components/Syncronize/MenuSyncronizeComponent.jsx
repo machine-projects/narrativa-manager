@@ -42,7 +42,7 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
 
   const fetchChannels = async () => {
     try {
-      const response = await axios.get("/api/channels");
+      const response = await axios.get("/api/channels?limit=1000");
       const channelData = response.data.data || [];
       setChannels(channelData);
       setSyncParams((prev) => ({
@@ -69,7 +69,8 @@ const MenuSyncronizeComponent = ({ filters, listSyncronize }) => {
       num_syncronize: "",
       startDate: null,
       endDate: null,
-      visible: "",
+      visible: ""
+      
     });
   };
 

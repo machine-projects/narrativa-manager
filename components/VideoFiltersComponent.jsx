@@ -26,7 +26,7 @@ const VideoFiltersComponent = ({ filters, setFilters, onApplyFilters, setPage  }
   const fetchChannels = async () => {
     setLoadingChannels(true);
     try {
-      const { data } = await axios.get(`/api/channels?limit=50`);
+      const { data } = await axios.get(`/api/channels?limit=1000`);
       setChannels(data.data);
       const allTargets = data.data.flatMap((channel) => channel.targets || []);
       setTargets([...new Set(allTargets)]);
