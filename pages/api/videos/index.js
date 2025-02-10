@@ -8,6 +8,10 @@ export default async function handler(req, res) {
 
         if (req.method === 'GET') {
             // Paginado ou todos os vídeos
+            res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+            res.setHeader("Pragma", "no-cache");
+            res.setHeader("Expires", "0");
+            res.setHeader("Surrogate-Control", "no-store");
             const {
                 page = 1,
                 limit = 10,
@@ -27,7 +31,8 @@ export default async function handler(req, res) {
                 channel_name_presentation,
                 favorite,
                 visible,
-                applied
+                applied,
+                _id
             } = req.query;
             const filters = {
                 channel_id,
@@ -45,7 +50,8 @@ export default async function handler(req, res) {
                 channel_name_presentation,
                 favorite,
                 visible,
-                applied
+                applied,
+                _id
             };
             if (all === 'true') {
                 const videos = await videosRepository.getAllVideos();
@@ -55,7 +61,7 @@ export default async function handler(req, res) {
             const limitNumber = Number(limit);
 const videos = await videosRepository.getPaginatedVideos(page, limitNumber, filters);
 
-if (limitNumber === 1 && channel_id) {
+if (limitNumber === 1 && _id) {
     if (videos.data?.length) {
         return res.status(200).json(videos.data[0]); // Corrigido para pegar o primeiro item corretamente
     }

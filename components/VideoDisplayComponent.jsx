@@ -245,7 +245,7 @@ const VideoDisplayComponent = ({
 
                                         {/* Botão para explorar */}
                                         <a
-                                            href={`/Video?channel_id=${video.channel_id}`}
+                                            href={`/Video?_id=${video._id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="btn btn-primary"

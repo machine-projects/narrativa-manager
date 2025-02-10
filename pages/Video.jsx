@@ -7,7 +7,7 @@ import NavBarComponent from "components/NavBarComponent";
 
 const ExplorarVideosPage = () => {
   const searchParams = useSearchParams();
-  const channel_id = searchParams.get("channel_id");
+  const _id = searchParams.get("_id");
 
   const [videoData, setVideoData] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -17,9 +17,9 @@ const ExplorarVideosPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (channel_id) {
+    if (_id) {
       axios
-        .get(`/api/videos?channel_id=${channel_id}&limit=1`)
+        .get(`/api/videos?_id=${_id}&limit=1`)
         .then((response) => {
           const video = response.data;
           setVideoData(video);
@@ -33,7 +33,7 @@ const ExplorarVideosPage = () => {
         })
         .finally(() => setLoading(false));
     }
-  }, [channel_id]);
+  }, [_id]);
 
   const handleApply = async () => {
     try {
