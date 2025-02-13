@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import NavBarComponent from "components/NavBarComponent";
+import VideoDownloads from "components/VideoDownloads"; // Importando o componente de download
 
 const ExplorarVideosPage = () => {
   const searchParams = useSearchParams();
@@ -79,7 +80,6 @@ const ExplorarVideosPage = () => {
       <div className="container mt-4">
         <h2 className="text-center mb-4">{videoData.title_presentation || "Título não disponível"}</h2>
 
-        {/* Vídeo centralizado */}
         <div className="d-flex justify-content-center">
           {videoData.embed?.iframeUrl ? (
             <iframe
@@ -95,7 +95,13 @@ const ExplorarVideosPage = () => {
           )}
         </div>
 
-        {/* Configurações do vídeo com switches modernos */}
+        {/* Área de Downloads */}
+        <div className="mt-4">
+          <h4>Download do Vídeo e Legendas</h4>
+          <VideoDownloads videoUrl={videoData.url} />
+        </div>
+
+        {/* Configurações */}
         <div className="mt-4">
           <h4>Configurações</h4>
           <div className="row">
