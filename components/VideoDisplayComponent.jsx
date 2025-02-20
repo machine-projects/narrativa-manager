@@ -213,7 +213,7 @@ const VideoDisplayComponent = ({
                                         {/* Validação do título */}
                                         <h5 className="card-title">
                                             {typeof video?.title_presentation === 'string' ||
-                                            typeof video?.title_presentation === 'number'
+                                                typeof video?.title_presentation === 'number'
                                                 ? video.title_presentation
                                                 : 'Título inválido'}
                                         </h5>
@@ -229,11 +229,13 @@ const VideoDisplayComponent = ({
                                         {/* Validação das visualizações */}
                                         <p className="card-text text-muted">
                                             Visualizações:{' '}
-                                            {typeof video?.views?.text === 'string' ||
-                                            typeof video?.views?.pretty === 'number'
+                                            {typeof video?.views?.text === 'string' || typeof video?.views?.pretty === 'number'
                                                 ? video.views.text
-                                                : 'N/A'}
+                                                : video?.statistics?.viewCount
+                                                    ? `${video.statistics.viewCount} views`
+                                                    : 'N/A'}
                                         </p>
+
 
                                         {/* Validação da data de publicação */}
                                         <p className="card-text text-muted">

@@ -81,9 +81,9 @@ const ExplorarVideosPage = () => {
         <h2 className="text-center mb-4">{videoData.title_presentation || "Título não disponível"}</h2>
 
         <div className="d-flex justify-content-center">
-          {videoData.embed?.iframeUrl ? (
+          {videoData.embed ? (
             <iframe
-              src={videoData.embed.iframeUrl}
+              src={videoData.embed}
               title={videoData.title_presentation || "Vídeo"}
               width="80%"
               height="450"
