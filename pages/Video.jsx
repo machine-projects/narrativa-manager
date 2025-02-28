@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import NavBarComponent from "components/NavBarComponent";
 import VideoDownloads from "components/VideoDownloads"; // Importando o componente de download
-
+import AnnotationDocument from "components/AnnotationDocument";
 const ExplorarVideosPage = () => {
   const searchParams = useSearchParams();
   const _id = searchParams.get("_id");
@@ -152,6 +152,10 @@ const ExplorarVideosPage = () => {
           <button className="btn btn-primary px-4 py-2" onClick={handleApply} disabled={!isModified}>
             Aplicar Alterações
           </button>
+        </div>
+          {/* Área de Anotação */}
+          <div className="mt-4">
+          <AnnotationDocument videoId={videoData._id} />
         </div>
       </div>
     </div>
