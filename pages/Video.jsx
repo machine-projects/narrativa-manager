@@ -78,9 +78,9 @@ const ExplorarVideosPage = () => {
     <div>
       <NavBarComponent active="home" />
       <div className="container mt-4">
-        <h2 className="text-center mb-4">{videoData.title_presentation || "Título não disponível"}</h2>
+        <h2 className="text mb-4">{videoData.title_presentation || "Título não disponível"}</h2>
 
-        <div className="d-flex justify-content-center">
+        <div className="d-flex justify-content">
           {videoData.embed ? (
             <iframe
               src={videoData.embed}
@@ -91,7 +91,7 @@ const ExplorarVideosPage = () => {
               allowFullScreen
             ></iframe>
           ) : (
-            <p className="text-center">O link do vídeo não está disponível.</p>
+            <p className="text">O link do vídeo não está disponível.</p>
           )}
         </div>
 

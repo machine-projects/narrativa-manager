@@ -46,7 +46,7 @@ const Home = () => {
       const { data } = await axios.get(`/api/videos`, {
         params: {
           page,
-          limit: 10,
+          limit: 12,
           ...serializedFilters,
         },
       });
