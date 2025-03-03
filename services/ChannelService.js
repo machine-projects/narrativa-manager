@@ -43,7 +43,8 @@ export class ChannelService extends BaseService {
             const response = await super.post(
                 apiUrl,
                 {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 },
                 payload
             );
