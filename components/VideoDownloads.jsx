@@ -17,31 +17,6 @@ const VideoDownloads = ({ videoUrl }) => {
     window.open(fullUrl, "_blank");
   };
 
-  const checkProgress = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://p.oceansaver.in/ajax/progress.php?id=${id}`
-      );
-      
-      if (!response.data) {
-        throw new Error("Erro ao verificar o progresso.");
-      }
-
-      if (response.data.progress) {
-        setProgress(response.data.progress / 10); // Normaliza para 0-100%
-      }
-
-      if (response.data.progress === 1000 && response.data.download_url) {
-        return response.data.download_url;
-      }
-      
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      return checkProgress(id);
-    } catch (error) {
-      console.error("Erro ao verificar o progresso:", error);
-      throw error;
-    }
-  };
 
   const handleDownloadVideo = async () => {
     if (!videoUrl) {
@@ -53,28 +28,11 @@ const VideoDownloads = ({ videoUrl }) => {
     setProgress(0);
 
     try {
-      const firstResponse = await axios.get(
-        `https://p.oceansaver.in/ajax/download.php?format=1080&url=${encodeURIComponent(videoUrl)}`
-      );
-
-      if (!firstResponse.data.success) {
-        throw new Error("Erro ao iniciar o download.");
-      }
-
-      const { id } = firstResponse.data;
-      const downloadUrl = await checkProgress(id);
-
-      if (downloadUrl) {
-        window.open(downloadUrl, "_blank");
-      } else {
-        throw new Error("Link de download não disponível.");
-      }
+ 
     } catch (error) {
-      console.error("Erro ao baixar o vídeo:", error);
-      alert("Erro ao baixar o vídeo. Tente novamente.");
+    
     } finally {
-      setIsDownloading(false);
-      setProgress(0);
+    
     }
   };
 
@@ -90,24 +48,20 @@ const VideoDownloads = ({ videoUrl }) => {
 
       <div className="mb-4">
         <h6>Download de Vídeo</h6>
-        <button className="btn btn-outline-success" onClick={handleDownloadVideo} disabled={isDownloading}>
-          {isDownloading ? `Baixando... (${progress}%)` : "Download via y2down"}
-        </button>
-
-        {isDownloading && (
-          <div className="progress mt-2">
-            <div
-              className="progress-bar progress-bar-striped progress-bar-animated"
-              role="progressbar"
-              style={{ width: `${progress}%` }}
-              aria-valuenow={progress}
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              {progress}%
-            </div>
-          </div>
-        )}
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://y2down.cc/en/", "_blank")}>Download via DownSub</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://transkriptor.com/pt-br/downloader-de-video-do-youtube/", "_blank")}>Download via Transkriptor</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://zeemo.ai/pt/tools/youtube-video-downloader", "_blank")}>Download via Zeemo</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://pt2.savefrom.net/", "_blank")}>Download via Savefrom</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://y2meta.lc/pt/", "_blank")}>Download via Y2meta</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://greenconvert.net/pt10/", "_blank")}>Download via Greenconvert</button>
+      </div>
+      <div className="mb-4">
+        <h6>Download de Audio</h6>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://mp3converter.fr/pt/youtube-para-mp3/", "_blank")}>Download via Mp3converter</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://transkriptor.com/pt-br/downloader-de-audio-do-youtube/", "_blank")}>Download via Transkriptor</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://y2meta.lc/pt/youtube-to-mp3/", "_blank")}>Download via Y2meta</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://greenconvert.net/pt10/youtube-mp3/", "_blank")}>Download via Greenconvert</button>
+        <button className="btn btn-outline-primary" onClick={() =>   window.open("https://app.aiseo.ai/pt/tools/youtube-to-mp3", "_blank")}>Download via Aiseo</button>
       </div>
     </>
   );
