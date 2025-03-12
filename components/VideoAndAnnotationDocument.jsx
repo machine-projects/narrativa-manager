@@ -17,7 +17,7 @@ export default function VideoAndAnnotationDocument({ videoId, embed }) {
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   // Estado para controle do colapso do componente AIPrompt na aba "anotacoes".
   const [isPromptCollapsed, setIsPromptCollapsed] = useState(true);
 
@@ -107,12 +107,15 @@ export default function VideoAndAnnotationDocument({ videoId, embed }) {
                   </div>
                   {!isPromptCollapsed && <AIPrompt />}
                 </div>
-                <iframe
-                  src={doc.webViewLink}
-                  title="Documento de Anotação"
-                  style={{ width: "100%", height: "800px" }}
-                />
-              </div>
+                <div className="border rounded-md p-3">
+                  <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-lg font-semibold">Anotações</h3>
+                    <iframe
+                      src={doc.webViewLink}
+                      title="Documento de Anotação"
+                      style={{ width: "100%", height: "800px" }}
+                    />
+                  </div></div></div>
             )}
           </div>
         )}
