@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import NavBarComponent from "components/NavBarComponent";
 import VideoDownloads from "components/VideoDownloads"; // Importando o componente de download
-import AnnotationDocument from "components/AnnotationDocument";
+import VideoAndAnnotationDocument from "components/VideoAndAnnotationDocument";
 const ExplorarVideosPage = () => {
   const searchParams = useSearchParams();
   const _id = searchParams.get("_id");
@@ -80,16 +80,12 @@ const ExplorarVideosPage = () => {
       <div className="container mt-4">
         <h2 className="text mb-4">{videoData.title_presentation || "Título não disponível"}</h2>
 
-        <div className="d-flex justify-content">
+        <div className=" justify-content">
+          {/* Área de Anotação */}
           {videoData.embed ? (
-            <iframe
-              src={videoData.embed}
-              title={videoData.title_presentation || "Vídeo"}
-              width="80%"
-              height="450"
-              frameBorder="0"
-              allowFullScreen
-            ></iframe>
+            <div className="mt-4">
+              <VideoAndAnnotationDocument videoId={videoData._id} embed={videoData.embed} />
+            </div>
           ) : (
             <p className="text">O link do vídeo não está disponível.</p>
           )}
@@ -153,10 +149,7 @@ const ExplorarVideosPage = () => {
             Aplicar Alterações
           </button>
         </div>
-          {/* Área de Anotação */}
-          <div className="mt-4">
-          <AnnotationDocument videoId={videoData._id} />
-        </div>
+         
       </div>
     </div>
   );
