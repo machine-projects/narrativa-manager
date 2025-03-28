@@ -1,0 +1,18 @@
+[
+  {
+    "apihost": "https://faas-nyc1-2ef2e6cc.doserverless.co",
+    "namespace": "fn-94b62a4a-33d4-4ab6-a51d-f837f55e4cba",
+    "packageVersions": {
+      "narrativa-manager": {
+        "version": "0.0.38",
+        "digest": "b7fe2f5353a9bb55e10aeb2859f30ba8ff01f6d85543166a956890c596e69e7c"
+      }
+    },
+    "actionVersions": {
+      "narrativa-manager/scheduled": {
+        "version": "0.0.4",
+        "digest": "f23ed468867502970f426e81719716d468d580ff4428697cc52234e9a28dc03f"
+      }
+    }
+  }
+]
