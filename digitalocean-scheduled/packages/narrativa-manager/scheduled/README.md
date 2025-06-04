@@ -41,7 +41,7 @@ cd d:\Projetos\Machine\narrativa-manager
 $env:DIGITALOCEAN_ACCESS_TOKEN="seu_token_da_docean"
 $env:OPENWHISK_NAMESPACE="NarrativaManager"
 
-doctl serverless deploy . --env digitalocean-scheduled/.env
+doctl serverless deploy . --env packages\narrativa-manager\scheduled\.env
 ```
 
 ## Observações
