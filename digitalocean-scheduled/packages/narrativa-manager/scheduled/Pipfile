@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 requests = "*"
+redis = "==6.2.0"
+python-dotenv = "*"
 
 [dev-packages]
 
