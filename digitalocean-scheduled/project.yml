@@ -13,5 +13,5 @@ packages:
           - name: trigger-sync
             sourceType: scheduler
             sourceDetails:
-              cron: "0 */12 * * *"
+              cron: "0 */6 * * *"
             
