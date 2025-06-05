@@ -4,6 +4,9 @@ packages:
   - name: narrativa-manager
     functions:
       - name: scheduled
+        environment:
+          REDIS_USER: __USUARIO__
+          REDIS_PASSWORD: __SENHA__
         binary: false
         runtime: 'python:default'
         web: false

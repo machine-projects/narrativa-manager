@@ -4,14 +4,14 @@
     "namespace": "fn-94b62a4a-33d4-4ab6-a51d-f837f55e4cba",
     "packageVersions": {
       "narrativa-manager": {
-        "version": "0.0.43",
+        "version": "0.0.51",
         "digest": "b7fe2f5353a9bb55e10aeb2859f30ba8ff01f6d85543166a956890c596e69e7c"
       }
     },
     "actionVersions": {
       "narrativa-manager/scheduled": {
-        "version": "0.0.10",
-        "digest": "0f6aa93d8523c1279d6c2f6442690f7d82bebda68e6ec8c48465ceaf98996f20"
+        "version": "0.0.21",
+        "digest": "fce6db30de724a16e456fc6cdcbafab4ac53a1c60251f78ba83cdfee559bf9eb"
       }
     }
   }

@@ -3,10 +3,11 @@ import json
 from datetime import datetime, timedelta
 import requests
 import redis
-from dotenv import load_dotenv
 # Carrega variáveis de ambiente do arquivo .env
-env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '.env'))
-load_dotenv(env_path)
+if  os.name == "nt":
+    from dotenv import load_dotenv
+    env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '.env'))
+    load_dotenv(env_path)
 
 # Redis configuration
 REDIS_HOST = "redis-10965.c309.us-east-2-1.ec2.redns.redis-cloud.com"
@@ -73,7 +74,13 @@ def main():
 
     # Process queue in batches
     while True:
-        batch = client.lpop(QUEUE_KEY, BATCH_SIZE)
+        # Pop up to BATCH_SIZE items one by one, as lpop doesn't accept count
+        batch = []
+        for _ in range(BATCH_SIZE):
+            item = client.lpop(QUEUE_KEY)
+            if not item:
+                break
+            batch.append(item)
         if not batch:
             print("Queue is empty, synchronization complete")
             break
